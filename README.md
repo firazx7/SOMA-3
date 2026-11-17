@@ -638,8 +638,7 @@ dul:hasRegion
 
 
 **Direkt unter `dul:associatedWith`** – Bedingungen und „dieses Ereignis hat diesen Prozess beendet“. Hier gibt es in
-DUL keine engere passende Oberproperty (Begründung in Abschnitt 5.C und 5.H):
-
+DUL keine engere passende Oberproperty:
 <table>
 <tr><th>Original-SOMA 2.2.0</th><th>SOMA 3.0 (🟩 = neu)</th></tr>
 <tr><td valign="top">
@@ -736,13 +735,13 @@ dul:hasDataValue
 ### Individuen
 
 Die sechs Ausführungszustände (`SOMA:ExecutionState_Active`, `_Cancelled`, `_Failed`, `_Paused`, `_Pending`,
-`_Succeeded`) bleiben unverändert. Neu ist ein Axiom über sie (Abschnitt 5.I):
+`_Succeeded`) bleiben unverändert. Neu ist ein Axiom über sie:
 
 | | Original-SOMA 2.2.0 | SOMA 3.0 |
 |---|---|---|
 | Protégé, Individuum `ExecutionState_Failed` → *Different Individuals* | leer | 🟩 `ExecutionState_Active`, `_Cancelled`, `_Paused`, `_Pending`, `_Succeeded` |
 
-### 4.5 Zusammenfassung der Änderungen
+### Zusammenfassung der Änderungen
 
 | | Original | SOMA 3.0 | Unterschied |
 |---|---:|---:|---|
