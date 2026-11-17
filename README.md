@@ -184,7 +184,7 @@ und Ereignisse starten und stoppen Prozesse. Ein Prozess ist dort aber kein Ding
 - Alle neuen Begriffe liegen im SOMA-Namensraum `http://www.ease-crc.org/ont/SOMA.owl#`, damit sie sich wie
   SOMA-Begriffe verhalten; die Module sind als Vorschlag für SOMA gedacht.
 
-**Ablauf eines Prozesses (Modul 1).** Grün = neu, ≈ = Vorbild in der PKO, offener Pfeil = Unterklasse.
+**Ablauf eines Prozesses (Modul 1).** Dicker Rahmen = neu, gestrichelter Pfeil mit offener Spitze = Unterklasse.
 
 <p align="center"><img src="abbildungen/07_klassendiagramm.png" width="900" alt="Klassendiagramm SOMA-PROC-PK"></p>
 
@@ -217,7 +217,7 @@ Die folgenden Bäume zeigen links das Original-SOMA und rechts SOMA 3.0, so wie 
 erscheinen (asserted hierarchy, Anzeige über **View → Render by prefixed name**). Sie sind direkt aus den OWL-Dateien
 erzeugt. Damit die Bäume lesbar bleiben, sind nur die Äste aufgeklappt, in denen sich etwas ändert;
 **▸** heißt „hat weitere Unterbegriffe“, **… n weitere** fasst unveränderte Geschwister zusammen.
-**🟩 fett** = neu in SOMA 3.0. Bestehende Begriffe werden an keiner Stelle verändert; alle Änderungen sind neue
+**Fett mit (neu)** = neu in SOMA 3.0. Bestehende Begriffe werden an keiner Stelle verändert; alle Änderungen sind neue
 Begriffe unter vorhandenen.
 
 ### Klassen
@@ -226,7 +226,7 @@ Begriffe unter vorhandenen.
 `ProcessDeviation` als eigenes Ereignis.
 
 <table>
-<tr><th>Original-SOMA 2.2.0</th><th>SOMA 3.0 (🟩 = neu)</th></tr>
+<tr><th>Original-SOMA 2.2.0</th><th>SOMA 3.0 (fett = neu)</th></tr>
 <tr><td valign="top">
 <pre>
 dul:Event
@@ -253,8 +253,8 @@ dul:Event
 ├─ dul:Process
 │  ├─ SOMA:ChemicalProcess
 │  ├─ SOMA:PhysicsProcess  ▸
-│  └─ <b>SOMA:TransformationProcess</b>  🟩
-├─ <b>SOMA:ProcessDeviation</b>  🟩
+│  └─ <b>SOMA:TransformationProcess</b>  (neu)
+├─ <b>SOMA:ProcessDeviation</b>  (neu)
 └─ SOMA:State
    ├─ SOMA:PhysicalState  ▸
    └─ SOMA:SocialState
@@ -267,7 +267,7 @@ dul:Event
 sind Ereignistypen); `LowerThreshold` und `UpperThreshold` unter dem bisher leeren `SOMA:Threshold`.
 
 <table>
-<tr><th>Original-SOMA 2.2.0</th><th>SOMA 3.0 (🟩 = neu)</th></tr>
+<tr><th>Original-SOMA 2.2.0</th><th>SOMA 3.0 (fett = neu)</th></tr>
 <tr><td valign="top">
 <pre>
 dul:Concept
@@ -306,7 +306,7 @@ dul:Concept
 <pre>
 dul:Concept
 ├─ dul:EventType
-│  ├─ <b>SOMA:ProcessDeviationType</b>  🟩
+│  ├─ <b>SOMA:ProcessDeviationType</b>  (neu)
 │  ├─ SOMA:ProcessType
 │  │  ├─ SOMA:Alteration  ▸
 │  │  ├─ SOMA:Collision
@@ -334,8 +334,8 @@ dul:Concept
 │  ├─ SOMA:Setpoint
 │  ├─ SOMA:Status
 │  ├─ SOMA:Threshold
-│  │  ├─ <b>SOMA:LowerThreshold</b>  🟩
-│  │  └─ <b>SOMA:UpperThreshold</b>  🟩
+│  │  ├─ <b>SOMA:LowerThreshold</b>  (neu)
+│  │  └─ <b>SOMA:UpperThreshold</b>  (neu)
 │  └─ dul:UnitOfMeasure
 └─ dul:Role  ▸
 </pre>
@@ -347,7 +347,7 @@ dul:Concept
 `Configuration`, die unverändert genutzt werden.
 
 <table>
-<tr><th>Original-SOMA 2.2.0</th><th>SOMA 3.0 (🟩 = neu)</th></tr>
+<tr><th>Original-SOMA 2.2.0</th><th>SOMA 3.0 (fett = neu)</th></tr>
 <tr><td valign="top">
 <pre>
 dul:Description
@@ -374,9 +374,9 @@ dul:Description
 ├─ dul:Narrative
 ├─ SOMA:ProcessFlow
 │  └─ SOMA:MotionDescription
-├─ <b>SOMA:ProcessVerification</b>  🟩
-│  ├─ <b>SOMA:PerceptualVerification</b>  🟩
-│  └─ <b>SOMA:SignalVerification</b>  🟩
+├─ <b>SOMA:ProcessVerification</b>  (neu)
+│  ├─ <b>SOMA:PerceptualVerification</b>  (neu)
+│  └─ <b>SOMA:SignalVerification</b>  (neu)
 └─ … 6 weitere
 </pre>
 </td></tr>
@@ -387,7 +387,7 @@ dul:Description
 erfüllt) wird genutzt, um Abweichungen einzuordnen.
 
 <table>
-<tr><th>Original-SOMA 2.2.0</th><th>SOMA 3.0 (🟩 = neu)</th></tr>
+<tr><th>Original-SOMA 2.2.0</th><th>SOMA 3.0 (fett = neu)</th></tr>
 <tr><td valign="top">
 <pre>
 dul:Situation
@@ -424,7 +424,7 @@ die neuen Properties stehen.
 **Beschreibung benutzt Begriff (`dul:usesConcept`)** – Schritte eines Ablaufs, Prüfung eines Schritts:
 
 <table>
-<tr><th>Original-SOMA 2.2.0</th><th>SOMA 3.0 (🟩 = neu)</th></tr>
+<tr><th>Original-SOMA 2.2.0</th><th>SOMA 3.0 (fett = neu)</th></tr>
 <tr><td valign="top">
 <pre>
 dul:usesConcept
@@ -445,11 +445,11 @@ dul:usesConcept
 │  ├─ SOMA:definesParameter  ▸
 │  ├─ SOMA:definesParticipant  ▸
 │  ├─ SOMA:definesProcess
-│  │  └─ <b>SOMA:hasProcessStep</b>  🟩
-│  │     ├─ <b>SOMA:hasFallbackProcessStep</b>  🟩
-│  │     └─ <b>SOMA:hasFirstProcessStep</b>  🟩
+│  │  └─ <b>SOMA:hasProcessStep</b>  (neu)
+│  │     ├─ <b>SOMA:hasFallbackProcessStep</b>  (neu)
+│  │     └─ <b>SOMA:hasFirstProcessStep</b>  (neu)
 │  └─ … 2 weitere
-└─ <b>SOMA:isVerificationOf</b>  🟩
+└─ <b>SOMA:isVerificationOf</b>  (neu)
 </pre>
 </td></tr>
 </table>
@@ -458,7 +458,7 @@ dul:usesConcept
 **Begriff wird in Beschreibung benutzt (`dul:isConceptUsedIn`)** – die Gegenrichtungen:
 
 <table>
-<tr><th>Original-SOMA 2.2.0</th><th>SOMA 3.0 (🟩 = neu)</th></tr>
+<tr><th>Original-SOMA 2.2.0</th><th>SOMA 3.0 (fett = neu)</th></tr>
 <tr><td valign="top">
 <pre>
 dul:isConceptUsedIn
@@ -473,14 +473,14 @@ dul:isConceptUsedIn
 </td><td valign="top">
 <pre>
 dul:isConceptUsedIn
-├─ <b>SOMA:hasVerification</b>  🟩
+├─ <b>SOMA:hasVerification</b>  (neu)
 └─ dul:isDefinedIn
    ├─ SOMA:isDefinedInAffordance  ▸
    ├─ SOMA:isEventTypeDefinedIn  ▸
    ├─ SOMA:isParameterDefinedIn  ▸
    ├─ SOMA:isProcessDefinedIn
-   │  └─ <b>SOMA:isProcessStepOf</b>  🟩
-   │     └─ <b>SOMA:isFirstProcessStepOf</b>  🟩
+   │  └─ <b>SOMA:isProcessStepOf</b>  (neu)
+   │     └─ <b>SOMA:isFirstProcessStepOf</b>  (neu)
    ├─ dul:isRoleDefinedIn  ▸
    └─ … 1 weitere
 </pre>
@@ -492,7 +492,7 @@ dul:isConceptUsedIn
 „dieses Ereignis hat diesen Prozess gestartet“ unter `SOMA:directlyCauses`:
 
 <table>
-<tr><th>Original-SOMA 2.2.0</th><th>SOMA 3.0 (🟩 = neu)</th></tr>
+<tr><th>Original-SOMA 2.2.0</th><th>SOMA 3.0 (fett = neu)</th></tr>
 <tr><td valign="top">
 <pre>
 dul:precedes
@@ -513,12 +513,12 @@ dul:precedes
 ├─ SOMA:affects
 │  └─ SOMA:causes
 │     └─ SOMA:directlyCauses
-│        └─ <b>SOMA:initiatesProcess</b>  🟩
-│           └─ <b>SOMA:sustainsProcess</b>  🟩
+│        └─ <b>SOMA:initiatesProcess</b>  (neu)
+│           └─ <b>SOMA:sustainsProcess</b>  (neu)
 ├─ SOMA:before  ▸
 └─ dul:directlyPrecedes
-   ├─ <b>SOMA:hasNextProcessStep</b>  🟩
-   │  └─ <b>SOMA:hasAlternativeNextProcessStep</b>  🟩
+   ├─ <b>SOMA:hasNextProcessStep</b>  (neu)
+   │  └─ <b>SOMA:hasAlternativeNextProcessStep</b>  (neu)
    ├─ SOMA:hasNextStep
    ├─ dul:hasPostcondition  ▸
    ├─ dul:isPreconditionOf
@@ -532,7 +532,7 @@ dul:precedes
 **Gegenrichtung (`dul:follows`):**
 
 <table>
-<tr><th>Original-SOMA 2.2.0</th><th>SOMA 3.0 (🟩 = neu)</th></tr>
+<tr><th>Original-SOMA 2.2.0</th><th>SOMA 3.0 (fett = neu)</th></tr>
 <tr><td valign="top">
 <pre>
 dul:follows
@@ -553,7 +553,7 @@ dul:follows
 ├─ SOMA:after  ▸
 ├─ dul:directlyFollows
 │  ├─ dul:hasPrecondition  ▸
-│  ├─ <b>SOMA:hasPreviousProcessStep</b>  🟩
+│  ├─ <b>SOMA:hasPreviousProcessStep</b>  (neu)
 │  ├─ SOMA:hasPreviousStep
 │  ├─ dul:isPostconditionOf
 │  ├─ dul:isSubordinatedTo
@@ -561,8 +561,8 @@ dul:follows
 └─ SOMA:isAffectedBy
    └─ SOMA:isReactionTo
       └─ SOMA:isDirectReactionTo
-         └─ <b>SOMA:isProcessInitiatedBy</b>  🟩
-            └─ <b>SOMA:isProcessSustainedBy</b>  🟩
+         └─ <b>SOMA:isProcessInitiatedBy</b>  (neu)
+            └─ <b>SOMA:isProcessSustainedBy</b>  (neu)
 </pre>
 </td></tr>
 </table>
@@ -573,7 +573,7 @@ welcher Schritt welche Abweichungsart behebt. Daneben steht das vorhandene `SOMA
 nach demselben Muster:
 
 <table>
-<tr><th>Original-SOMA 2.2.0</th><th>SOMA 3.0 (🟩 = neu)</th></tr>
+<tr><th>Original-SOMA 2.2.0</th><th>SOMA 3.0 (fett = neu)</th></tr>
 <tr><td valign="top">
 <pre>
 dul:isRelatedToConcept
@@ -588,20 +588,20 @@ dul:isRelatedToConcept
 </td><td valign="top">
 <pre>
 dul:isRelatedToConcept
-├─ <b>SOMA:addressesDeviation</b>  🟩
+├─ <b>SOMA:addressesDeviation</b>  (neu)
 ├─ dul:hasParameter  ▸
 ├─ SOMA:hasProcessType
 ├─ SOMA:hasStateType
 ├─ dul:hasTask  ▸
-├─ <b>SOMA:isDeviationAddressedBy</b>  🟩
+├─ <b>SOMA:isDeviationAddressedBy</b>  (neu)
 ├─ dul:isParameterFor  ▸
-├─ <b>SOMA:isProcessStoppedBy</b>  🟩
-├─ <b>SOMA:isProcessTriggeredBy</b>  🟩
-│  └─ <b>SOMA:isProcessDrivenBy</b>  🟩
+├─ <b>SOMA:isProcessStoppedBy</b>  (neu)
+├─ <b>SOMA:isProcessTriggeredBy</b>  (neu)
+│  └─ <b>SOMA:isProcessDrivenBy</b>  (neu)
 ├─ SOMA:isProcessTypeOf
-├─ <b>SOMA:stopsProcess</b>  🟩
-├─ <b>SOMA:triggersProcess</b>  🟩
-│  └─ <b>SOMA:drivesProcess</b>  🟩
+├─ <b>SOMA:stopsProcess</b>  (neu)
+├─ <b>SOMA:triggersProcess</b>  (neu)
+│  └─ <b>SOMA:drivesProcess</b>  (neu)
 └─ … 4 weitere
 </pre>
 </td></tr>
@@ -611,7 +611,7 @@ dul:isRelatedToConcept
 **Regionen (`dul:hasRegion`)** – Ausführungszustand eines Prozesses neben dem vorhandenen für Aktionen:
 
 <table>
-<tr><th>Original-SOMA 2.2.0</th><th>SOMA 3.0 (🟩 = neu)</th></tr>
+<tr><th>Original-SOMA 2.2.0</th><th>SOMA 3.0 (fett = neu)</th></tr>
 <tr><td valign="top">
 <pre>
 dul:hasRegion
@@ -630,7 +630,7 @@ dul:hasRegion
 ├─ SOMA:hasFrictionAttribute
 ├─ SOMA:hasJointLimit
 ├─ SOMA:hasJointState
-├─ <b>SOMA:hasProcessState</b>  🟩
+├─ <b>SOMA:hasProcessState</b>  (neu)
 └─ … 7 weitere
 </pre>
 </td></tr>
@@ -640,7 +640,7 @@ dul:hasRegion
 **Direkt unter `dul:associatedWith`** – Bedingungen und „dieses Ereignis hat diesen Prozess beendet“. Hier gibt es in
 DUL keine engere passende Oberproperty:
 <table>
-<tr><th>Original-SOMA 2.2.0</th><th>SOMA 3.0 (🟩 = neu)</th></tr>
+<tr><th>Original-SOMA 2.2.0</th><th>SOMA 3.0 (fett = neu)</th></tr>
 <tr><td valign="top">
 <pre>
 dul:associatedWith
@@ -675,16 +675,16 @@ dul:associatedWith
 ├─ dul:describes  ▸
 ├─ SOMA:encapsulates
 ├─ SOMA:encodes
-├─ <b>SOMA:hasEntryCondition</b>  🟩
-├─ <b>SOMA:hasExitCondition</b>  🟩
-├─ <b>SOMA:hasTriggerCondition</b>  🟩
-├─ <b>SOMA:isConditionViolatedBy</b>  🟩
-├─ <b>SOMA:isEntryConditionOf</b>  🟩
-├─ <b>SOMA:isExitConditionOf</b>  🟩
-├─ <b>SOMA:isProcessTerminatedBy</b>  🟩
-├─ <b>SOMA:isTriggerConditionOf</b>  🟩
-├─ <b>SOMA:terminatesProcess</b>  🟩
-├─ <b>SOMA:violatesCondition</b>  🟩
+├─ <b>SOMA:hasEntryCondition</b>  (neu)
+├─ <b>SOMA:hasExitCondition</b>  (neu)
+├─ <b>SOMA:hasTriggerCondition</b>  (neu)
+├─ <b>SOMA:isConditionViolatedBy</b>  (neu)
+├─ <b>SOMA:isEntryConditionOf</b>  (neu)
+├─ <b>SOMA:isExitConditionOf</b>  (neu)
+├─ <b>SOMA:isProcessTerminatedBy</b>  (neu)
+├─ <b>SOMA:isTriggerConditionOf</b>  (neu)
+├─ <b>SOMA:terminatesProcess</b>  (neu)
+├─ <b>SOMA:violatesCondition</b>  (neu)
 └─ … 59 weitere
 </pre>
 </td></tr>
@@ -696,7 +696,7 @@ dul:associatedWith
 Alle Data Properties in SOMA hängen unter `dul:hasDataValue`; die fünf neuen ebenso:
 
 <table>
-<tr><th>Original-SOMA 2.2.0</th><th>SOMA 3.0 (🟩 = neu)</th></tr>
+<tr><th>Original-SOMA 2.2.0</th><th>SOMA 3.0 (fett = neu)</th></tr>
 <tr><td valign="top">
 <pre>
 dul:hasDataValue
@@ -713,19 +713,19 @@ dul:hasDataValue
 </td><td valign="top">
 <pre>
 dul:hasDataValue
-├─ <b>SOMA:expectedSignalValue</b>  🟩
+├─ <b>SOMA:expectedSignalValue</b>  (neu)
 ├─ SOMA:hasDataFormat
 ├─ dul:hasEventDate
 ├─ SOMA:hasEventTime
 │  ├─ SOMA:hasEventBegin
 │  └─ SOMA:hasEventEnd
-├─ <b>SOMA:hasExpectedDuration</b>  🟩
+├─ <b>SOMA:hasExpectedDuration</b>  (neu)
 ├─ SOMA:hasFilePath
-├─ <b>SOMA:hasMaxRepetitions</b>  🟩
-├─ <b>SOMA:hasMinRepetitions</b>  🟩
+├─ <b>SOMA:hasMaxRepetitions</b>  (neu)
+├─ <b>SOMA:hasMinRepetitions</b>  (neu)
 ├─ SOMA:hasNameString
 ├─ dul:hasParameterDataValue
-├─ <b>SOMA:signalIdentifier</b>  🟩
+├─ <b>SOMA:signalIdentifier</b>  (neu)
 └─ … 4 weitere
 </pre>
 </td></tr>
@@ -739,7 +739,7 @@ Die sechs Ausführungszustände (`SOMA:ExecutionState_Active`, `_Cancelled`, `_F
 
 | | Original-SOMA 2.2.0 | SOMA 3.0 |
 |---|---|---|
-| Protégé, Individuum `ExecutionState_Failed` → *Different Individuals* | leer | 🟩 `ExecutionState_Active`, `_Cancelled`, `_Paused`, `_Pending`, `_Succeeded` |
+| Protégé, Individuum `ExecutionState_Failed` → *Different Individuals* | leer | (neu) `ExecutionState_Active`, `_Cancelled`, `_Paused`, `_Pending`, `_Succeeded` |
 
 ### Zusammenfassung der Änderungen
 
@@ -1454,12 +1454,14 @@ Jede einzelne PKO-Entscheidung steht mit Begründung in `mapping/mapping-pko-som
 
 <p align="center"><img src="abbildungen/06_mapping.png" width="720" alt="Zuordnung PKO → SOMA"></p>
 
+Links der PKO-Begriff, rechts der SOMA-Begriff. Dicker Rahmen = neu angelegt, „(vorhanden)“ = in SOMA schon vorhanden, gestrichelt = nicht übernommen.
+
 | Entscheidung | Anzahl |
 |---|---:|
-| 🟩 neu angelegt (aus der PKO) | 20 |
-| 🟪 in SOMA schon vorhanden | 35 |
-| ⬜ weggelassen | 50 |
-| ➕ zusätzlich, nicht aus der PKO (aus [3]–[6] oder eigene Ergänzung) | 13 |
+| neu angelegt (aus der PKO) | 20 |
+| in SOMA schon vorhanden | 35 |
+| weggelassen | 50 |
+| zusätzlich, nicht aus der PKO (aus [3]–[6] oder eigene Ergänzung) | 13 |
 
 ---
 
