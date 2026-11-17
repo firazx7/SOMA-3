@@ -1,0 +1,119 @@
+pko_begriff,typ,entscheidung,soma_begriff,erwartetes_axiom,begruendung,quelle
+hasStep,OP,neu,SOMA:hasProcessStep,SubObjectPropertyOf(SOMA:hasProcessStep SOMA:definesProcess),"ProcessFlow konnte bisher nur sagen, welche ProcessTypes er definiert; jetzt als Schritt",[1]
+hasFirstStep,OP,neu,SOMA:hasFirstProcessStep,SubObjectPropertyOf(SOMA:hasFirstProcessStep SOMA:hasProcessStep),Startpunkt eines Prozessablaufs,[1]
+isFirstStepOf,OP,neu,SOMA:isFirstProcessStepOf,InverseObjectProperties(SOMA:hasFirstProcessStep SOMA:isFirstProcessStepOf),Gegenrichtung wie in PKO,[1]
+nextStep,OP,neu,SOMA:hasNextProcessStep,SubObjectPropertyOf(SOMA:hasNextProcessStep dul:directlyPrecedes),Reihenfolge; an DUL-Zeitordnung angehängt,[1]
+previousStep,OP,neu,SOMA:hasPreviousProcessStep,SubObjectPropertyOf(SOMA:hasPreviousProcessStep dul:directlyFollows);InverseObjectProperties(SOMA:hasNextProcessStep SOMA:hasPreviousProcessStep),Gegenrichtung,[1]
+nextAlternativeStep,OP,neu,SOMA:hasAlternativeNextProcessStep,SubObjectPropertyOf(SOMA:hasAlternativeNextProcessStep SOMA:hasNextProcessStep),exklusive Verzweigung (z. B. weiter mixen oder fertig),[1]
+previousAlternativeStep,OP,vorhanden,SOMA:hasPreviousProcessStep,,folgt aus Inverse von hasNextProcessStep (Obereigenschaft der Alternative); eigene Property nicht nötig,[1]
+hasFallbackStep,OP,neu,SOMA:hasFallbackProcessStep,SubObjectPropertyOf(SOMA:hasFallbackProcessStep SOMA:hasProcessStep),Recovery-Schritt; vgl. RepeatLastAction/ReplaceResource in [3],"[1],[3]"
+minRepetitions,DP,neu,SOMA:hasMinRepetitions,DataPropertyDomain(SOMA:hasMinRepetitions dul:EventType),"an EventType, damit auch für Tasks nutzbar",[1]
+maxRepetitions,DP,neu,SOMA:hasMaxRepetitions,DataPropertyDomain(SOMA:hasMaxRepetitions dul:EventType),Anzahl Versuche vor Fehlerdiagnose,"[1],[3]"
+hasExpectedDuration,OP,neu,SOMA:hasExpectedDuration,DataPropertyRange(SOMA:hasExpectedDuration xsd:double);FunctionalDataProperty(SOMA:hasExpectedDuration),"in PKO Objekt (time:Duration); hier Zahl in Sekunden – einfacher für Roboter, aus NEEMs lernbar","[1],[4]"
+hasRequirement,OP,neu,SOMA:hasEntryCondition;SOMA:hasExitCondition,ObjectPropertyRange(SOMA:hasEntryCondition SOMA:Configuration);ObjectPropertyRange(SOMA:hasExitCondition SOMA:Configuration),Anforderung als Zustandsbeschreibung (Configuration); getrennt in Start- und Endbedingung wie entry/exit_conditions in [4],"[1],[4]"
+Requirement,C,vorhanden,SOMA:Configuration,,SOMA beschreibt erwartete Zustände bereits mit Configuration,"[1],[2]"
+RequirementType,C,vorhanden,SOMA:hasEntryCondition / SOMA:hasExitCondition,,Typ ergibt sich aus der verwendeten Property,[1]
+hasRequirementType,OP,vorhanden,SOMA:hasEntryCondition / SOMA:hasExitCondition,,s. o.,[1]
+requiredEntity,OP,vorhanden,dul:usesConcept (Configuration → Role),,Configuration verweist in DUL auf Rollen/Parameter,[1]
+RequirementSatisfaction,C,vorhanden,dul:satisfies (State → Configuration),,Erfüllung = ein Zustand erfüllt die Configuration,"[1],[2]"
+hasRequirementSatisfaction,OP,vorhanden,dul:satisfies,,s. o.,[1]
+refersToRequirement,OP,vorhanden,dul:satisfies,,s. o.,[1]
+RequirementSatisfactionLevel,C,weggelassen,,,Grad der Erfüllung (teilweise …) – möglicher Ausbau,[1]
+hasRequirementSatisfactionLevel,OP,weggelassen,,,s. o.,[1]
+StepVerification,C,neu,SOMA:ProcessVerification,SubClassOf(SOMA:ProcessVerification dul:Description),"Beschreibung, wie der Erfolg geprüft wird",[1]
+SignalVerification,C,neu,SOMA:SignalVerification,SubClassOf(SOMA:SignalVerification SOMA:ProcessVerification),Prüfung über Sensorsignal,[1]
+hasStepVerification,OP,neu,SOMA:hasVerification,SubObjectPropertyOf(SOMA:hasVerification dul:isConceptUsedIn),verbindet EventType und Prüfbeschreibung,[1]
+isStepVerificationOf,OP,neu,SOMA:isVerificationOf,InverseObjectProperties(SOMA:hasVerification SOMA:isVerificationOf),Gegenrichtung,[1]
+signalIdentifier,DP,neu,SOMA:signalIdentifier,DataPropertyDomain(SOMA:signalIdentifier SOMA:SignalVerification),unverändert übernommen,[1]
+expectedSignalValue,DP,neu,SOMA:expectedSignalValue,DataPropertyDomain(SOMA:expectedSignalValue SOMA:SignalVerification),unverändert übernommen,[1]
+IssueOccurrence,C,neu,SOMA:ProcessDeviation,SubClassOf(SOMA:ProcessDeviation dul:Event),Abweichung während eines konkreten Ablaufs,"[1],[3]"
+hasIssueOccurrence,OP,vorhanden,dul:includesEvent / dul:isEventIncludedIn,,Progression enthält die Abweichung als Ereignis,[1]
+Error,C,neu,SOMA:ProcessDeviationType,SubClassOf(SOMA:ProcessDeviationType dul:EventType);SubClassOf(SOMA:ProcessDeviationType ObjectAllValuesFrom(dul:classifies SOMA:ProcessDeviation)),"Fehlerart als EventType, der Abweichungen klassifiziert (Muster wie ProcessType ⊑ EventType); kein Import von SOMA-ACT nötig",[1]
+addressesError,OP,neu,SOMA:addressesDeviation;SOMA:isDeviationAddressedBy,SubObjectPropertyOf(SOMA:addressesDeviation dul:isRelatedToConcept);ObjectPropertyRange(SOMA:addressesDeviation SOMA:ProcessDeviationType);InverseObjectProperties(SOMA:addressesDeviation SOMA:isDeviationAddressedBy),welcher (Fallback-)Schritt welche Fehlerart behebt,[1]
+hasEncounteredError,OP,vorhanden,dul:isClassifiedBy,,Abweichung isClassifiedBy ProcessDeviationType (DUL-Klassifikation),[1]
+errorCause,DP,weggelassen,,,Freitext; maschinenlesbar stattdessen SOMA:violatesCondition (verletzte Bedingung),[1]
+errorCode,DP,weggelassen,,,Freitext/Kennung aus der Industrie; für Roboter-Reasoning nicht nötig,[1]
+issueCause,DP,weggelassen,,,Freitext; für Roboter-Reasoning nicht nutzbar,[1]
+issueSolution,DP,weggelassen,,,Freitext,[1]
+Procedure,C,vorhanden,SOMA:ProcessFlow (Prozesse) / dul:Workflow (Tasks),,Beschreibung eines Ablaufs gibt es in SOMA bereits,"[1],[2]"
+ProcedureExecution,C,vorhanden,SOMA:Progression,,"konkreter Ablauf, der einen ProcessFlow erfüllt","[1],[2]"
+StepExecution,C,vorhanden,dul:Process,,konkretes Ereignis,"[1],[2]"
+hasExecutedProcedure,OP,vorhanden,dul:satisfies,,Progression satisfies ProcessFlow,[1]
+hasExecutedStep,OP,vorhanden,SOMA:isOccurrenceOf,,Process isOccurrenceOf ProcessType,"[1],[2]"
+includesStepExecution,OP,vorhanden,dul:includesEvent,,,[1]
+isIncludedInProcedureExecution,OP,vorhanden,dul:isEventIncludedIn,,,[1]
+nextStepExecution,OP,vorhanden,dul:directlyPrecedes,,zeitliche Ordnung von Ereignissen in DUL,[1]
+previousStepExecution,OP,vorhanden,dul:directlyFollows,,,[1]
+Transition,C,vorhanden,SOMA:hasNextProcessStep / SOMA:Succedence,,Übergang ohne eigene Klasse; für Tasks gibt es Succedence in SOMA-WF,"[1],[2]"
+fromStep,OP,vorhanden,SOMA:hasNextProcessStep,,s. Transition,[1]
+toStep,OP,vorhanden,SOMA:hasNextProcessStep,,s. Transition,[1]
+Action,C,vorhanden,dul:Task,,von Menschen/Agenten ausgeführte Aufgabe,"[1],[2]"
+Function,C,vorhanden,dul:Task,,Software-Funktion ist ebenfalls eine Task,[1]
+requiresAction,OP,vorhanden,SOMA:isProcessTriggeredBy,,Prozess wird durch Task ausgelöst (neu aus [4]),"[1],[4]"
+requiresFunction,OP,vorhanden,SOMA:isProcessTriggeredBy,,s. o.,[1]
+requiresTool,OP,vorhanden,SOMA:isProcessTypeOf + Rolle SOMA:Instrument,,Werkzeuge sind in SOMA Rollen,"[1],[2]"
+hasProcedureTarget,OP,vorhanden,SOMA:isProcessTypeOf (Rolle z. B. AlteredObject),,Zielobjekt als Rolle,"[1],[2]"
+ProcedureType,C,vorhanden,Unterklassen von SOMA:ProcessType,,Arten von Prozessen sind in SOMA eine Klassenhierarchie,"[1],[2]"
+hasProcedureType,OP,vorhanden,rdf:type,,s. o.,[1]
+ProcedureExecutionStatus,C,vorhanden,SOMA:ExecutionStateRegion,,läuft/pausiert/fertig gibt es in SOMA,"[1],[2]"
+Status,C,vorhanden,SOMA:Status,,,"[1],[2]"
+wasExecutedBy,OP,vorhanden,dul:involvesAgent,,,[1]
+wasConfirmedBy,OP,weggelassen,,,menschliche Freigabe – nicht im Scope,[1]
+wasEncounteredBy,OP,vorhanden,dul:involvesAgent,,,[1]
+stepNumber,DP,weggelassen,,,Reihenfolge ergibt sich aus hasNextProcessStep,[1]
+isStepOfMultiStep,OP,vorhanden,dul:hasPart / SOMA:isProcessDefinedIn,,ProcessType ⊑ ∀hasPart.ProcessType in SOMA: ein Schritt kann Teilschritte haben und selbst in einem eigenen ProcessFlow definiert sein,[1]
+hasExplanation,OP,weggelassen,,,Erklärtext für Menschen,[1]
+Explanation,C,weggelassen,,,s. o.,[1]
+ChangeOfStatus,C,weggelassen,,,Dokumentation/Organisation von Verfahren für Menschen in Firmen – nicht im Scope von Roboterprozessen,[1]
+EvaluationRequestStatus,C,weggelassen,,,Dokumentation/Organisation von Verfahren für Menschen in Firmen – nicht im Scope von Roboterprozessen,[1]
+ExpertiseLevel,C,weggelassen,,,Dokumentation/Organisation von Verfahren für Menschen in Firmen – nicht im Scope von Roboterprozessen,[1]
+FAQCategory,C,weggelassen,,,Dokumentation/Organisation von Verfahren für Menschen in Firmen – nicht im Scope von Roboterprozessen,[1]
+FAQTarget,C,weggelassen,,,Dokumentation/Organisation von Verfahren für Menschen in Firmen – nicht im Scope von Roboterprozessen,[1]
+FrequentlyAskedQuestion,C,weggelassen,,,Dokumentation/Organisation von Verfahren für Menschen in Firmen – nicht im Scope von Roboterprozessen,[1]
+ProcedureStatus,C,weggelassen,,,Dokumentation/Organisation von Verfahren für Menschen in Firmen – nicht im Scope von Roboterprozessen,[1]
+Qualification,C,weggelassen,,,Dokumentation/Organisation von Verfahren für Menschen in Firmen – nicht im Scope von Roboterprozessen,[1]
+UserFeedbackOccurrence,C,weggelassen,,,Dokumentation/Organisation von Verfahren für Menschen in Firmen – nicht im Scope von Roboterprozessen,[1]
+UserQuestionOccurrence,C,weggelassen,,,Dokumentation/Organisation von Verfahren für Menschen in Firmen – nicht im Scope von Roboterprozessen,[1]
+assigneeRole,OP,weggelassen,,,Dokumentation/Organisation von Verfahren für Menschen in Firmen – nicht im Scope von Roboterprozessen,[1]
+fromStatus,OP,weggelassen,,,Dokumentation/Organisation von Verfahren für Menschen in Firmen – nicht im Scope von Roboterprozessen,[1]
+toStatus,OP,weggelassen,,,Dokumentation/Organisation von Verfahren für Menschen in Firmen – nicht im Scope von Roboterprozessen,[1]
+hasChangeOfStatus,OP,weggelassen,,,Dokumentation/Organisation von Verfahren für Menschen in Firmen – nicht im Scope von Roboterprozessen,[1]
+isChangeOfStatusOf,OP,weggelassen,,,Dokumentation/Organisation von Verfahren für Menschen in Firmen – nicht im Scope von Roboterprozessen,[1]
+hasFAQCategory,OP,weggelassen,,,Dokumentation/Organisation von Verfahren für Menschen in Firmen – nicht im Scope von Roboterprozessen,[1]
+hasFAQTarget,OP,weggelassen,,,Dokumentation/Organisation von Verfahren für Menschen in Firmen – nicht im Scope von Roboterprozessen,[1]
+hasTemplate,OP,weggelassen,,,Dokumentation/Organisation von Verfahren für Menschen in Firmen – nicht im Scope von Roboterprozessen,[1]
+isTemplateOf,OP,weggelassen,,,Dokumentation/Organisation von Verfahren für Menschen in Firmen – nicht im Scope von Roboterprozessen,[1]
+hasUserFeedbackOccurrence,OP,weggelassen,,,Dokumentation/Organisation von Verfahren für Menschen in Firmen – nicht im Scope von Roboterprozessen,[1]
+hasUserQuestionOccurrence,OP,weggelassen,,,Dokumentation/Organisation von Verfahren für Menschen in Firmen – nicht im Scope von Roboterprozessen,[1]
+isAdoptedBy,OP,weggelassen,,,Dokumentation/Organisation von Verfahren für Menschen in Firmen – nicht im Scope von Roboterprozessen,[1]
+isCurrentVersionOf,OP,weggelassen,,,Dokumentation/Organisation von Verfahren für Menschen in Firmen – nicht im Scope von Roboterprozessen,[1]
+nextVersion,OP,weggelassen,,,Dokumentation/Organisation von Verfahren für Menschen in Firmen – nicht im Scope von Roboterprozessen,[1]
+isQuestionAddressedBy,OP,weggelassen,,,Dokumentation/Organisation von Verfahren für Menschen in Firmen – nicht im Scope von Roboterprozessen,[1]
+isStepForExpertiseLevel,OP,weggelassen,,,Dokumentation/Organisation von Verfahren für Menschen in Firmen – nicht im Scope von Roboterprozessen,[1]
+wasAskedBy,OP,weggelassen,,,Dokumentation/Organisation von Verfahren für Menschen in Firmen – nicht im Scope von Roboterprozessen,[1]
+wasExtractedFrom,OP,weggelassen,,,Dokumentation/Organisation von Verfahren für Menschen in Firmen – nicht im Scope von Roboterprozessen,[1]
+wasModifiedBy,OP,weggelassen,,,Dokumentation/Organisation von Verfahren für Menschen in Firmen – nicht im Scope von Roboterprozessen,[1]
+wasProvidedBy,OP,weggelassen,,,Dokumentation/Organisation von Verfahren für Menschen in Firmen – nicht im Scope von Roboterprozessen,[1]
+answer,DP,weggelassen,,,Dokumentation/Organisation von Verfahren für Menschen in Firmen – nicht im Scope von Roboterprozessen,[1]
+changelogDescription,DP,weggelassen,,,Dokumentation/Organisation von Verfahren für Menschen in Firmen – nicht im Scope von Roboterprozessen,[1]
+feedbackOnProcedure,DP,weggelassen,,,Dokumentation/Organisation von Verfahren für Menschen in Firmen – nicht im Scope von Roboterprozessen,[1]
+feedbackOnProcedureExecution,DP,weggelassen,,,Dokumentation/Organisation von Verfahren für Menschen in Firmen – nicht im Scope von Roboterprozessen,[1]
+isTemplate,DP,weggelassen,,,Dokumentation/Organisation von Verfahren für Menschen in Firmen – nicht im Scope von Roboterprozessen,[1]
+newVersionMotivation,DP,weggelassen,,,Dokumentation/Organisation von Verfahren für Menschen in Firmen – nicht im Scope von Roboterprozessen,[1]
+question,DP,weggelassen,,,Dokumentation/Organisation von Verfahren für Menschen in Firmen – nicht im Scope von Roboterprozessen,[1]
+questionByUser,DP,weggelassen,,,Dokumentation/Organisation von Verfahren für Menschen in Firmen – nicht im Scope von Roboterprozessen,[1]
+requestStatusMotivation,DP,weggelassen,,,Dokumentation/Organisation von Verfahren für Menschen in Firmen – nicht im Scope von Roboterprozessen,[1]
+versionNumber,DP,weggelassen,,,Dokumentation/Organisation von Verfahren für Menschen in Firmen – nicht im Scope von Roboterprozessen,[1]
+–,OP,neu,SOMA:triggersProcess,SubObjectPropertyOf(SOMA:triggersProcess dul:isRelatedToConcept),Task startet Prozess (triggers_process); liegt jetzt im Modul SOMA-ACT-PROC,"[4],[5]"
+–,OP,neu,SOMA:stopsProcess,SubObjectPropertyOf(SOMA:stopsProcess dul:isRelatedToConcept),Task/Rolle beendet Prozess (stops_process); liegt jetzt im Modul SOMA-ACT-PROC,"[4],[5]"
+–,C,neu,SOMA:TransformationProcess,EquivalentClasses(SOMA:TransformationProcess ObjectIntersectionOf(dul:Process ObjectSomeValuesFrom(dul:hasParticipant SOMA:Transient))),Prozess mit Transient wird automatisch erkannt,[4]
+–,C,neu,SOMA:PerceptualVerification,SubClassOf(SOMA:PerceptualVerification SOMA:ProcessVerification),Prüfung über Kamera (Perception),"[3],[4]"
+–,OP,neu,SOMA:hasTriggerCondition;SOMA:isTriggerConditionOf,SubObjectPropertyOf(SOMA:hasTriggerCondition dul:associatedWith);ObjectPropertyDomain(SOMA:hasTriggerCondition SOMA:ProcessType);ObjectPropertyRange(SOMA:hasTriggerCondition SOMA:Configuration),"Prozess startet von selbst durch einen Zustand (Hitze, Kontakt), nicht durch einen Task – Regeln Gl. 2/3",[4]
+–,C,neu,SOMA:LowerThreshold,SubClassOf(SOMA:LowerThreshold SOMA:Threshold),Zahlen-Bedingung ≥ Wert; baut auf SOMA:Threshold ⊑ dul:Parameter und dul:hasParameterDataValue auf (DUL empfiehlt dort zwei Teil-Parameter für Wertebereiche),eigen
+–,C,neu,SOMA:UpperThreshold,SubClassOf(SOMA:UpperThreshold SOMA:Threshold);DisjointClasses(SOMA:LowerThreshold SOMA:UpperThreshold),Zahlen-Bedingung ≤ Wert; Gegenstück zu LowerThreshold,eigen
+–,OP,neu,SOMA:violatesCondition;SOMA:isConditionViolatedBy,SubObjectPropertyOf(SOMA:violatesCondition dul:associatedWith);ObjectPropertyDomain(SOMA:violatesCondition SOMA:ProcessDeviation),welche Bedingung bei einer Abweichung nicht erfüllt war (maschinenlesbare Fehlerursache),eigen
+–,OP,neu,SOMA:drivesProcess;SOMA:isProcessDrivenBy,SubObjectPropertyOf(SOMA:drivesProcess SOMA:triggersProcess);InverseObjectProperties(SOMA:drivesProcess SOMA:isProcessDrivenBy),"Prozess läuft nur, solange der Task ausgeführt wird (z. B. Gießen → Fließen)",[5]
+–,OP,neu,SOMA:initiatesProcess;SOMA:isProcessInitiatedBy,SubObjectPropertyOf(SOMA:initiatesProcess SOMA:directlyCauses);ObjectPropertyDomain(SOMA:initiatesProcess dul:Event);ObjectPropertyRange(SOMA:initiatesProcess dul:Process),"dieses Ereignis hat diesen Prozess gestartet (Vorkommnis-Ebene); Domain Event, damit auch Ereignisse ohne Agent erlaubt sind","[5],[6]"
+–,OP,neu,SOMA:sustainsProcess;SOMA:isProcessSustainedBy,SubObjectPropertyOf(SOMA:sustainsProcess SOMA:initiatesProcess),"Prozess läuft nur, solange dieses Ereignis läuft (Vorkommnis zu drivesProcess)",[5]
+–,OP,neu,SOMA:terminatesProcess;SOMA:isProcessTerminatedBy,SubObjectPropertyOf(SOMA:terminatesProcess dul:associatedWith);ObjectPropertyRange(SOMA:terminatesProcess dul:Process),"dieses Ereignis hat diesen Prozess beendet; nicht unter causes, da es das Ende und nicht den Prozess verursacht","[5],[6]"
+–,OP,neu,SOMA:hasProcessState,FunctionalObjectProperty(SOMA:hasProcessState);ObjectPropertyRange(SOMA:hasProcessState SOMA:ExecutionStateRegion),"Ausführungszustand eines Prozesses mit denselben Werten wie bei Aktionen (aktiv, fertig, abgebrochen …)",eigen

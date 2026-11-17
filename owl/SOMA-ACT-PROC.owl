@@ -1,0 +1,178 @@
+Prefix(:=<http://www.ease-crc.org/ont/SOMA-ACT-PROC.owl#>)
+Prefix(dul:=<http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#>)
+Prefix(owl:=<http://www.w3.org/2002/07/owl#>)
+Prefix(rdf:=<http://www.w3.org/1999/02/22-rdf-syntax-ns#>)
+Prefix(xml:=<http://www.w3.org/XML/1998/namespace>)
+Prefix(xsd:=<http://www.w3.org/2001/XMLSchema#>)
+Prefix(SOMA:=<http://www.ease-crc.org/ont/SOMA.owl#>)
+Prefix(rdfs:=<http://www.w3.org/2000/01/rdf-schema#>)
+
+
+Ontology(<http://www.ease-crc.org/ont/SOMA-ACT-PROC.owl>
+Import(<http://www.ease-crc.org/ont/SOMA-ACT.owl>)
+Import(<http://www.ease-crc.org/ont/SOMA-PROC-PK.owl>)
+Annotation(rdfs:comment "SOMA-ACT-PROC.owl defines how actions and processes are coupled. SOMA distinguishes actions, i.e. events that are executed by an agent and classified by tasks (SOMA-ACT), from processes, i.e. events considered in their evolution that do not necessarily have an agentive cause (SOMA-PROC). An action may cause processes to be started or stopped; this module makes these relations explicit, both between descriptions (tasks and process types) and between occurrences (events and processes).
+
+Between descriptions, a task can trigger a process type: executing the task starts a process of that type, which then unfolds independently of the agent and may continue after the task has ended, e.g. putting batter into a hot pan starts the baking of the batter. A task can drive a process type: the process only unfolds while the task is executed, e.g. pouring drives the flow of the poured liquid. A task, or an object coming to play some role, can stop a process type, e.g. switching off a heating plate stops a heating process. A process can also start without any action, when a State satisfies its trigger condition (hasTriggerCondition in SOMA-PROC-PK), and a process can enable an action when the State it brings about satisfies the entry condition of a task (hasEntryCondition in SOMA-PROC-PK).
+
+Between occurrences, initiatesProcess, sustainsProcess and terminatesProcess relate an event to a concrete process, and hasProcessState gives the state of execution of a process. Since the domain of these relations is dul:Event and not dul:Action, a process can be started or ended both by an action and by an event that is not executed by an agent, e.g. a pot boiling over. The module therefore does not commit to whether such events form a category of their own.
+
+The distinction follows the actions, processes and events of PDDL+ (Fox and Long 2006: Modelling Mixed Discrete-Continuous Domains for Planning), the initiates and terminates relations of the Event Calculus (Kowalski and Sergot 1986: A logic-based calculus of events), and the task-process relations of Kuempel et al. (2024): Between Input and Output: The Importance of Modelling Transients in Meal Preparation Tasks.")
+
+Declaration(ObjectProperty(SOMA:drivesProcess))
+Declaration(ObjectProperty(SOMA:hasProcessState))
+Declaration(ObjectProperty(SOMA:initiatesProcess))
+Declaration(ObjectProperty(SOMA:isProcessDrivenBy))
+Declaration(ObjectProperty(SOMA:isProcessInitiatedBy))
+Declaration(ObjectProperty(SOMA:isProcessStoppedBy))
+Declaration(ObjectProperty(SOMA:isProcessSustainedBy))
+Declaration(ObjectProperty(SOMA:isProcessTerminatedBy))
+Declaration(ObjectProperty(SOMA:isProcessTriggeredBy))
+Declaration(ObjectProperty(SOMA:stopsProcess))
+Declaration(ObjectProperty(SOMA:sustainsProcess))
+Declaration(ObjectProperty(SOMA:terminatesProcess))
+Declaration(ObjectProperty(SOMA:triggersProcess))
+
+############################
+#   Object Properties
+############################
+
+# Object Property: SOMA:drivesProcess (drives process)
+
+AnnotationAssertion(rdfs:comment SOMA:drivesProcess "A relation between a Task and a ProcessType, stating that a process of that type unfolds only while the task is executed, e.g. pouring drives the flow of the poured liquid, and pushing an object drives its motion. When the execution of the task ends, the process ends as well.")
+AnnotationAssertion(rdfs:label SOMA:drivesProcess "drives process")
+SubObjectPropertyOf(SOMA:drivesProcess SOMA:triggersProcess)
+InverseObjectProperties(SOMA:drivesProcess SOMA:isProcessDrivenBy)
+ObjectPropertyDomain(SOMA:drivesProcess dul:Task)
+ObjectPropertyRange(SOMA:drivesProcess SOMA:ProcessType)
+
+# Object Property: SOMA:hasProcessState (has process state)
+
+AnnotationAssertion(rdfs:comment SOMA:hasProcessState "A relation between a Process and its state of execution, e.g. pending, active, paused, succeeded, failed or cancelled. It uses the same regions as the execution state of actions (hasExecutionState), so that the progress of actions and processes can be queried in the same way. A process that ends because its exit condition is reached has succeeded; a process that ends before, e.g. because of a ProcessDeviation or because it is terminated by an event, has failed or is cancelled.")
+AnnotationAssertion(rdfs:label SOMA:hasProcessState "has process state")
+SubObjectPropertyOf(SOMA:hasProcessState dul:hasRegion)
+FunctionalObjectProperty(SOMA:hasProcessState)
+ObjectPropertyDomain(SOMA:hasProcessState dul:Process)
+ObjectPropertyRange(SOMA:hasProcessState SOMA:ExecutionStateRegion)
+
+# Object Property: SOMA:initiatesProcess (initiates process)
+
+AnnotationAssertion(rdfs:comment SOMA:initiatesProcess "A relation between an Event and a Process, stating that the process started because of the event, e.g. this pouring action started this mixing process. The event can be an Action, or an event that is not executed by an agent. An action that initiates a process is typically classified by a Task that triggers the ProcessType classifying the process.")
+AnnotationAssertion(rdfs:label SOMA:initiatesProcess "initiates process")
+SubObjectPropertyOf(SOMA:initiatesProcess SOMA:directlyCauses)
+InverseObjectProperties(SOMA:initiatesProcess SOMA:isProcessInitiatedBy)
+ObjectPropertyDomain(SOMA:initiatesProcess dul:Event)
+ObjectPropertyRange(SOMA:initiatesProcess dul:Process)
+
+# Object Property: SOMA:isProcessDrivenBy (is process driven by)
+
+AnnotationAssertion(rdfs:comment SOMA:isProcessDrivenBy "A relation between a ProcessType and a Task, stating that a process of that type only unfolds while the task is executed.")
+AnnotationAssertion(rdfs:label SOMA:isProcessDrivenBy "is process driven by")
+SubObjectPropertyOf(SOMA:isProcessDrivenBy SOMA:isProcessTriggeredBy)
+ObjectPropertyDomain(SOMA:isProcessDrivenBy SOMA:ProcessType)
+ObjectPropertyRange(SOMA:isProcessDrivenBy dul:Task)
+
+# Object Property: SOMA:isProcessInitiatedBy (is process initiated by)
+
+AnnotationAssertion(rdfs:comment SOMA:isProcessInitiatedBy "A relation between a Process and the Event because of which it started.")
+AnnotationAssertion(rdfs:label SOMA:isProcessInitiatedBy "is process initiated by")
+SubObjectPropertyOf(SOMA:isProcessInitiatedBy SOMA:isDirectReactionTo)
+ObjectPropertyDomain(SOMA:isProcessInitiatedBy dul:Process)
+ObjectPropertyRange(SOMA:isProcessInitiatedBy dul:Event)
+
+# Object Property: SOMA:isProcessStoppedBy (is process stopped by)
+
+AnnotationAssertion(rdfs:comment SOMA:isProcessStoppedBy "A relation between a ProcessType and a Concept, stating that a process of that type ends when a task of that kind is executed, or when some object comes to play a role of that kind.")
+AnnotationAssertion(rdfs:label SOMA:isProcessStoppedBy "is process stopped by")
+SubObjectPropertyOf(SOMA:isProcessStoppedBy dul:isRelatedToConcept)
+InverseObjectProperties(SOMA:isProcessStoppedBy SOMA:stopsProcess)
+ObjectPropertyDomain(SOMA:isProcessStoppedBy SOMA:ProcessType)
+ObjectPropertyRange(SOMA:isProcessStoppedBy dul:Concept)
+
+# Object Property: SOMA:isProcessSustainedBy (is process sustained by)
+
+AnnotationAssertion(rdfs:comment SOMA:isProcessSustainedBy "A relation between a Process and an Event, stating that the process only unfolds while the event unfolds.")
+AnnotationAssertion(rdfs:label SOMA:isProcessSustainedBy "is process sustained by")
+SubObjectPropertyOf(SOMA:isProcessSustainedBy SOMA:isProcessInitiatedBy)
+InverseObjectProperties(SOMA:isProcessSustainedBy SOMA:sustainsProcess)
+ObjectPropertyDomain(SOMA:isProcessSustainedBy dul:Process)
+ObjectPropertyRange(SOMA:isProcessSustainedBy dul:Event)
+
+# Object Property: SOMA:isProcessTerminatedBy (is process terminated by)
+
+AnnotationAssertion(rdfs:comment SOMA:isProcessTerminatedBy "A relation between a Process and the Event because of which it ended.")
+AnnotationAssertion(rdfs:label SOMA:isProcessTerminatedBy "is process terminated by")
+SubObjectPropertyOf(SOMA:isProcessTerminatedBy dul:associatedWith)
+InverseObjectProperties(SOMA:isProcessTerminatedBy SOMA:terminatesProcess)
+ObjectPropertyDomain(SOMA:isProcessTerminatedBy dul:Process)
+ObjectPropertyRange(SOMA:isProcessTerminatedBy dul:Event)
+
+# Object Property: SOMA:isProcessTriggeredBy (is process triggered by)
+
+AnnotationAssertion(rdfs:comment SOMA:isProcessTriggeredBy "A relation between a ProcessType and a Task, stating that a process of that type starts when the task is executed.")
+AnnotationAssertion(rdfs:label SOMA:isProcessTriggeredBy "is process triggered by")
+SubObjectPropertyOf(SOMA:isProcessTriggeredBy dul:isRelatedToConcept)
+InverseObjectProperties(SOMA:isProcessTriggeredBy SOMA:triggersProcess)
+ObjectPropertyDomain(SOMA:isProcessTriggeredBy SOMA:ProcessType)
+ObjectPropertyRange(SOMA:isProcessTriggeredBy dul:Task)
+
+# Object Property: SOMA:stopsProcess (stops process)
+
+AnnotationAssertion(rdfs:comment SOMA:stopsProcess "A relation between a Concept and a ProcessType, stating that a process of that type ends when a task of that kind is executed, or when some object comes to play a role of that kind, e.g. switching off a heating plate stops a heating process, and flipping a pancake stops the baking of its first side.")
+AnnotationAssertion(rdfs:label SOMA:stopsProcess "stops process")
+SubObjectPropertyOf(SOMA:stopsProcess dul:isRelatedToConcept)
+ObjectPropertyDomain(SOMA:stopsProcess dul:Concept)
+ObjectPropertyRange(SOMA:stopsProcess SOMA:ProcessType)
+
+# Object Property: SOMA:sustainsProcess (sustains process)
+
+AnnotationAssertion(rdfs:comment SOMA:sustainsProcess "A relation between an Event and a Process, stating that the process only unfolds while the event unfolds, e.g. this pouring action sustains the flow of the poured liquid. An action that sustains a process is typically classified by a Task that drives the ProcessType classifying the process.")
+AnnotationAssertion(rdfs:label SOMA:sustainsProcess "sustains process")
+SubObjectPropertyOf(SOMA:sustainsProcess SOMA:initiatesProcess)
+ObjectPropertyDomain(SOMA:sustainsProcess dul:Event)
+ObjectPropertyRange(SOMA:sustainsProcess dul:Process)
+
+# Object Property: SOMA:terminatesProcess (terminates process)
+
+AnnotationAssertion(rdfs:comment SOMA:terminatesProcess "A relation between an Event and a Process, stating that the process ended because of the event, e.g. this switching off of a heating plate ended this heating process. An action that terminates a process is typically classified by a Task that stops the ProcessType classifying the process. The relation does not specialize causes, since the event does not cause the process itself but its end.")
+AnnotationAssertion(rdfs:label SOMA:terminatesProcess "terminates process")
+SubObjectPropertyOf(SOMA:terminatesProcess dul:associatedWith)
+ObjectPropertyDomain(SOMA:terminatesProcess dul:Event)
+ObjectPropertyRange(SOMA:terminatesProcess dul:Process)
+
+# Object Property: SOMA:triggersProcess (triggers process)
+
+AnnotationAssertion(rdfs:comment SOMA:triggersProcess "A relation between a Task and a ProcessType, stating that executing the task starts a process of that type. Unless the more specific drivesProcess is used, the process then unfolds independently of the agent and may continue after the task has ended, e.g. switching on a heating plate starts a heating process, and putting batter into a hot pan starts the baking of the batter. Executing the task usually brings about a State that satisfies the trigger condition of the process type.")
+AnnotationAssertion(rdfs:label SOMA:triggersProcess "triggers process")
+SubObjectPropertyOf(SOMA:triggersProcess dul:isRelatedToConcept)
+ObjectPropertyDomain(SOMA:triggersProcess dul:Task)
+ObjectPropertyRange(SOMA:triggersProcess SOMA:ProcessType)
+
+
+
+
+############################
+#   Named Individuals
+############################
+
+# Individual: SOMA:ExecutionState_Active (SOMA:ExecutionState_Active)
+
+
+# Individual: SOMA:ExecutionState_Cancelled (SOMA:ExecutionState_Cancelled)
+
+
+# Individual: SOMA:ExecutionState_Failed (SOMA:ExecutionState_Failed)
+
+
+# Individual: SOMA:ExecutionState_Paused (SOMA:ExecutionState_Paused)
+
+
+# Individual: SOMA:ExecutionState_Pending (SOMA:ExecutionState_Pending)
+
+
+# Individual: SOMA:ExecutionState_Succeeded (SOMA:ExecutionState_Succeeded)
+
+
+
+DifferentIndividuals(Annotation(rdfs:comment "The execution states of actions and processes are pairwise different, e.g. a process that has succeeded has not failed.") SOMA:ExecutionState_Active SOMA:ExecutionState_Cancelled SOMA:ExecutionState_Failed SOMA:ExecutionState_Paused SOMA:ExecutionState_Pending SOMA:ExecutionState_Succeeded)
+)

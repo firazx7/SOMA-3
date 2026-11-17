@@ -1,0 +1,30 @@
+@prefix SOMA: <http://www.ease-crc.org/ont/SOMA.owl#> .
+@prefix pko: <https://w3id.org/pko#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://www.ease-crc.org/ont/SOMA-PROC-PK-pko-mapping.owl> a owl:Ontology ;
+    rdfs:comment "Alignment of the terms of SOMA-PROC-PK.owl to the Procedural Knowledge Ontology (PKO, https://w3id.org/pko, v2.0.0). Kept separate from the module so that SOMA-PROC-PK only uses SOMA and DUL vocabulary. Every decision, including PKO terms that already exist in SOMA or are left out, is documented in mapping-pko-soma.csv." .
+
+SOMA:hasProcessStep skos:closeMatch pko:hasStep .
+SOMA:hasFirstProcessStep skos:closeMatch pko:hasFirstStep .
+SOMA:isFirstProcessStepOf skos:closeMatch pko:isFirstStepOf .
+SOMA:hasNextProcessStep skos:closeMatch pko:nextStep .
+SOMA:hasPreviousProcessStep skos:closeMatch pko:previousStep .
+SOMA:hasAlternativeNextProcessStep skos:closeMatch pko:nextAlternativeStep .
+SOMA:hasFallbackProcessStep skos:closeMatch pko:hasFallbackStep .
+SOMA:hasMinRepetitions skos:closeMatch pko:minRepetitions .
+SOMA:hasMaxRepetitions skos:closeMatch pko:maxRepetitions .
+SOMA:hasExpectedDuration skos:closeMatch pko:hasExpectedDuration .
+SOMA:hasEntryCondition skos:relatedMatch pko:hasRequirement .
+SOMA:hasExitCondition skos:relatedMatch pko:hasRequirement .
+SOMA:ProcessVerification skos:closeMatch pko:StepVerification .
+SOMA:SignalVerification skos:closeMatch pko:SignalVerification .
+SOMA:hasVerification skos:closeMatch pko:hasStepVerification .
+SOMA:isVerificationOf skos:closeMatch pko:isStepVerificationOf .
+SOMA:signalIdentifier skos:exactMatch pko:signalIdentifier .
+SOMA:expectedSignalValue skos:exactMatch pko:expectedSignalValue .
+SOMA:ProcessDeviation skos:closeMatch pko:IssueOccurrence .
+SOMA:ProcessDeviationType skos:closeMatch pko:Error .
+SOMA:addressesDeviation skos:closeMatch pko:addressesError .

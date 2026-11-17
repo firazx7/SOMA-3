@@ -1,0 +1,336 @@
+Prefix(:=<http://www.ease-crc.org/ont/SOMA-PROC-PK.owl#>)
+Prefix(dul:=<http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#>)
+Prefix(owl:=<http://www.w3.org/2002/07/owl#>)
+Prefix(rdf:=<http://www.w3.org/1999/02/22-rdf-syntax-ns#>)
+Prefix(xml:=<http://www.w3.org/XML/1998/namespace>)
+Prefix(xsd:=<http://www.w3.org/2001/XMLSchema#>)
+Prefix(SOMA:=<http://www.ease-crc.org/ont/SOMA.owl#>)
+Prefix(rdfs:=<http://www.w3.org/2000/01/rdf-schema#>)
+
+
+Ontology(<http://www.ease-crc.org/ont/SOMA-PROC-PK.owl>
+Import(<http://www.ease-crc.org/ont/SOMA-PROC.owl>)
+Import(<http://www.ease-crc.org/ont/SOMA-STATE.owl>)
+Annotation(rdfs:comment "SOMA-PROC-PK.owl extends SOMA-PROC with knowledge about how a process unfolds step by step: the steps of a ProcessFlow and their order, alternatives and fallbacks, how often and how long a step is expected to unfold, the conditions under which a process or a step starts and ends, how the outcome of a step can be verified, and deviations that may occur while a process unfolds.
+
+The structure of steps, requirements, verifications and errors is adapted from the Procedural Knowledge Ontology (PKO, https://w3id.org/pko) and expressed with SOMA and DUL vocabulary: descriptions of procedures and their steps correspond to ProcessFlows and ProcessTypes, their executions correspond to Progressions and Processes. Processes that start by themselves when a state satisfies their trigger condition, and the notion of transformation processes, follow Kuempel et al. (2024): Between Input and Output: The Importance of Modelling Transients in Meal Preparation Tasks.
+
+Like SOMA-PROC, SOMA-PROC-PK should not import SOMA-ACT or other modules that import SOMA-ACT. Properties that apply to both processes and tasks are therefore defined on their common superclass dul:EventType. How actions and processes are coupled, e.g. a task that triggers or stops a process, is defined in SOMA-ACT-PROC.")
+
+Declaration(Class(SOMA:LowerThreshold))
+Declaration(Class(SOMA:PerceptualVerification))
+Declaration(Class(SOMA:ProcessDeviation))
+Declaration(Class(SOMA:ProcessDeviationType))
+Declaration(Class(SOMA:ProcessVerification))
+Declaration(Class(SOMA:SignalVerification))
+Declaration(Class(SOMA:TransformationProcess))
+Declaration(Class(SOMA:UpperThreshold))
+Declaration(ObjectProperty(SOMA:addressesDeviation))
+Declaration(ObjectProperty(SOMA:hasAlternativeNextProcessStep))
+Declaration(ObjectProperty(SOMA:hasEntryCondition))
+Declaration(ObjectProperty(SOMA:hasExitCondition))
+Declaration(ObjectProperty(SOMA:hasFallbackProcessStep))
+Declaration(ObjectProperty(SOMA:hasFirstProcessStep))
+Declaration(ObjectProperty(SOMA:hasNextProcessStep))
+Declaration(ObjectProperty(SOMA:hasPreviousProcessStep))
+Declaration(ObjectProperty(SOMA:hasProcessStep))
+Declaration(ObjectProperty(SOMA:hasTriggerCondition))
+Declaration(ObjectProperty(SOMA:hasVerification))
+Declaration(ObjectProperty(SOMA:isConditionViolatedBy))
+Declaration(ObjectProperty(SOMA:isDeviationAddressedBy))
+Declaration(ObjectProperty(SOMA:isEntryConditionOf))
+Declaration(ObjectProperty(SOMA:isExitConditionOf))
+Declaration(ObjectProperty(SOMA:isFirstProcessStepOf))
+Declaration(ObjectProperty(SOMA:isProcessStepOf))
+Declaration(ObjectProperty(SOMA:isTriggerConditionOf))
+Declaration(ObjectProperty(SOMA:isVerificationOf))
+Declaration(ObjectProperty(SOMA:violatesCondition))
+Declaration(DataProperty(SOMA:expectedSignalValue))
+Declaration(DataProperty(SOMA:hasExpectedDuration))
+Declaration(DataProperty(SOMA:hasMaxRepetitions))
+Declaration(DataProperty(SOMA:hasMinRepetitions))
+Declaration(DataProperty(SOMA:signalIdentifier))
+
+############################
+#   Object Properties
+############################
+
+# Object Property: SOMA:addressesDeviation (adresses deviation)
+
+AnnotationAssertion(rdfs:comment SOMA:addressesDeviation "A relation between an EventType and a ProcessDeviationType, stating that an event of that type can resolve deviations of that kind. It is typically used for fallback steps, e.g. re-grasping addresses an object slipping out of a gripper.")
+AnnotationAssertion(rdfs:label SOMA:addressesDeviation "adresses deviation")
+SubObjectPropertyOf(SOMA:addressesDeviation dul:isRelatedToConcept)
+InverseObjectProperties(SOMA:addressesDeviation SOMA:isDeviationAddressedBy)
+ObjectPropertyDomain(SOMA:addressesDeviation dul:EventType)
+ObjectPropertyRange(SOMA:addressesDeviation SOMA:ProcessDeviationType)
+
+# Object Property: SOMA:hasAlternativeNextProcessStep (has alternative next process step)
+
+AnnotationAssertion(rdfs:comment SOMA:hasAlternativeNextProcessStep "A relation between two steps of a ProcessFlow, stating that the second step is one of several mutually exclusive next steps. Exactly one of the alternatives unfolds, typically the one whose entry condition is satisfied, e.g. a surface is polished again or polishing ends, depending on the measured roughness of the surface.")
+AnnotationAssertion(rdfs:label SOMA:hasAlternativeNextProcessStep "has alternative next process step")
+SubObjectPropertyOf(SOMA:hasAlternativeNextProcessStep SOMA:hasNextProcessStep)
+ObjectPropertyDomain(SOMA:hasAlternativeNextProcessStep SOMA:ProcessType)
+ObjectPropertyRange(SOMA:hasAlternativeNextProcessStep SOMA:ProcessType)
+
+# Object Property: SOMA:hasEntryCondition (has entry condition)
+
+AnnotationAssertion(rdfs:comment SOMA:hasEntryCondition "A relation between an EventType and a Configuration that describes the State in which an event of that type can start, e.g. a gripper can start closing when an object is between its fingers. Numeric limits of a condition are expressed by Thresholds that the Configuration defines, see LowerThreshold and UpperThreshold.")
+AnnotationAssertion(rdfs:label SOMA:hasEntryCondition "has entry condition")
+SubObjectPropertyOf(SOMA:hasEntryCondition dul:associatedWith)
+InverseObjectProperties(SOMA:hasEntryCondition SOMA:isEntryConditionOf)
+ObjectPropertyDomain(SOMA:hasEntryCondition dul:EventType)
+ObjectPropertyRange(SOMA:hasEntryCondition SOMA:Configuration)
+
+# Object Property: SOMA:hasExitCondition (has exit condition)
+
+AnnotationAssertion(rdfs:comment SOMA:hasExitCondition "A relation between an EventType and a Configuration that describes the State in which an event of that type has successfully ended, e.g. a screwing process ends when the screw is tightened with the required torque. If the condition is not reached, e.g. within the expected duration, this indicates a ProcessDeviation.")
+AnnotationAssertion(rdfs:label SOMA:hasExitCondition "has exit condition")
+SubObjectPropertyOf(SOMA:hasExitCondition dul:associatedWith)
+InverseObjectProperties(SOMA:hasExitCondition SOMA:isExitConditionOf)
+ObjectPropertyDomain(SOMA:hasExitCondition dul:EventType)
+ObjectPropertyRange(SOMA:hasExitCondition SOMA:Configuration)
+
+# Object Property: SOMA:hasFallbackProcessStep (has fallback process step)
+
+AnnotationAssertion(rdfs:comment SOMA:hasFallbackProcessStep "A relation between a ProcessFlow and a step that only unfolds after a ProcessDeviation was detected, e.g. a step that repeats or undoes a previous step. Which kinds of deviations a fallback step resolves can be stated with addressesDeviation.")
+AnnotationAssertion(rdfs:label SOMA:hasFallbackProcessStep "has fallback process step")
+SubObjectPropertyOf(SOMA:hasFallbackProcessStep SOMA:hasProcessStep)
+ObjectPropertyDomain(SOMA:hasFallbackProcessStep SOMA:ProcessFlow)
+ObjectPropertyRange(SOMA:hasFallbackProcessStep SOMA:ProcessType)
+
+# Object Property: SOMA:hasFirstProcessStep (has first process step)
+
+AnnotationAssertion(rdfs:comment SOMA:hasFirstProcessStep "A relation between a ProcessFlow and the ProcessType that is its first step.")
+AnnotationAssertion(rdfs:label SOMA:hasFirstProcessStep "has first process step")
+SubObjectPropertyOf(SOMA:hasFirstProcessStep SOMA:hasProcessStep)
+InverseObjectProperties(SOMA:hasFirstProcessStep SOMA:isFirstProcessStepOf)
+ObjectPropertyDomain(SOMA:hasFirstProcessStep SOMA:ProcessFlow)
+ObjectPropertyRange(SOMA:hasFirstProcessStep SOMA:ProcessType)
+
+# Object Property: SOMA:hasNextProcessStep (has next process step)
+
+AnnotationAssertion(rdfs:comment SOMA:hasNextProcessStep "A relation between two steps of a ProcessFlow, stating that a process of the first type is directly followed by a process of the second type. If a step has several next steps that are not alternatives (see hasAlternativeNextProcessStep), they may unfold concurrently.")
+AnnotationAssertion(rdfs:label SOMA:hasNextProcessStep "has next process step")
+SubObjectPropertyOf(SOMA:hasNextProcessStep dul:directlyPrecedes)
+InverseObjectProperties(SOMA:hasNextProcessStep SOMA:hasPreviousProcessStep)
+ObjectPropertyDomain(SOMA:hasNextProcessStep SOMA:ProcessType)
+ObjectPropertyRange(SOMA:hasNextProcessStep SOMA:ProcessType)
+
+# Object Property: SOMA:hasPreviousProcessStep (has previous process step)
+
+AnnotationAssertion(rdfs:comment SOMA:hasPreviousProcessStep "A relation between two steps of a ProcessFlow, stating that a process of the first type is directly preceded by a process of the second type.")
+AnnotationAssertion(rdfs:label SOMA:hasPreviousProcessStep "has previous process step")
+SubObjectPropertyOf(SOMA:hasPreviousProcessStep dul:directlyFollows)
+ObjectPropertyDomain(SOMA:hasPreviousProcessStep SOMA:ProcessType)
+ObjectPropertyRange(SOMA:hasPreviousProcessStep SOMA:ProcessType)
+
+# Object Property: SOMA:hasProcessStep (has process step)
+
+AnnotationAssertion(rdfs:comment SOMA:hasProcessStep "A relation between a ProcessFlow and a ProcessType that is one of its steps, e.g. a flow describing how a liquid is boiled may have the steps heating up, boiling and cooling down.")
+AnnotationAssertion(rdfs:label SOMA:hasProcessStep "has process step")
+SubObjectPropertyOf(SOMA:hasProcessStep SOMA:definesProcess)
+InverseObjectProperties(SOMA:hasProcessStep SOMA:isProcessStepOf)
+ObjectPropertyDomain(SOMA:hasProcessStep SOMA:ProcessFlow)
+ObjectPropertyRange(SOMA:hasProcessStep SOMA:ProcessFlow)
+
+# Object Property: SOMA:hasTriggerCondition (has trigger condition)
+
+AnnotationAssertion(rdfs:comment SOMA:hasTriggerCondition "A relation between a ProcessType and a Configuration that describes a State in which a process of that type starts by itself, without being caused by an action, e.g. ice starts melting when its surrounding is warmer than 0 degrees Celsius, or two adhesives start curing when they are in contact. In contrast, an entry condition only describes when an event can start, and triggersProcess (SOMA-ACT-PROC) describes a process that is started by executing a task.")
+AnnotationAssertion(rdfs:label SOMA:hasTriggerCondition "has trigger condition")
+SubObjectPropertyOf(SOMA:hasTriggerCondition dul:associatedWith)
+InverseObjectProperties(SOMA:hasTriggerCondition SOMA:isTriggerConditionOf)
+ObjectPropertyDomain(SOMA:hasTriggerCondition SOMA:ProcessType)
+ObjectPropertyRange(SOMA:hasTriggerCondition SOMA:Configuration)
+
+# Object Property: SOMA:hasVerification (has verification)
+
+AnnotationAssertion(rdfs:comment SOMA:hasVerification "A relation between an EventType and a ProcessVerification that describes how the outcome of its events can be checked.")
+AnnotationAssertion(rdfs:label SOMA:hasVerification "has verification")
+SubObjectPropertyOf(SOMA:hasVerification dul:isConceptUsedIn)
+InverseObjectProperties(SOMA:hasVerification SOMA:isVerificationOf)
+ObjectPropertyDomain(SOMA:hasVerification dul:EventType)
+ObjectPropertyRange(SOMA:hasVerification SOMA:ProcessVerification)
+
+# Object Property: SOMA:isConditionViolatedBy (is condition violated by)
+
+AnnotationAssertion(rdfs:comment SOMA:isConditionViolatedBy "A relation between a Configuration and a ProcessDeviation in which it is not satisfied.")
+AnnotationAssertion(rdfs:label SOMA:isConditionViolatedBy "is condition violated by")
+SubObjectPropertyOf(SOMA:isConditionViolatedBy dul:associatedWith)
+InverseObjectProperties(SOMA:isConditionViolatedBy SOMA:violatesCondition)
+ObjectPropertyDomain(SOMA:isConditionViolatedBy SOMA:Configuration)
+ObjectPropertyRange(SOMA:isConditionViolatedBy SOMA:ProcessDeviation)
+
+# Object Property: SOMA:isDeviationAddressedBy (is deviation addressed by)
+
+AnnotationAssertion(rdfs:comment SOMA:isDeviationAddressedBy "A relation between a ProcessDeviationType and an EventType whose events can resolve deviations of that kind.")
+AnnotationAssertion(rdfs:label SOMA:isDeviationAddressedBy "is deviation addressed by")
+SubObjectPropertyOf(SOMA:isDeviationAddressedBy dul:isRelatedToConcept)
+ObjectPropertyDomain(SOMA:isDeviationAddressedBy SOMA:ProcessDeviationType)
+ObjectPropertyRange(SOMA:isDeviationAddressedBy dul:EventType)
+
+# Object Property: SOMA:isEntryConditionOf (is entry condition of)
+
+AnnotationAssertion(rdfs:comment SOMA:isEntryConditionOf "A relation between a Configuration and an EventType, stating that an event of that type can start in a State described by the Configuration.")
+AnnotationAssertion(rdfs:label SOMA:isEntryConditionOf "is entry condition of")
+SubObjectPropertyOf(SOMA:isEntryConditionOf dul:associatedWith)
+ObjectPropertyDomain(SOMA:isEntryConditionOf SOMA:Configuration)
+ObjectPropertyRange(SOMA:isEntryConditionOf dul:EventType)
+
+# Object Property: SOMA:isExitConditionOf (is exit condition of)
+
+AnnotationAssertion(rdfs:comment SOMA:isExitConditionOf "A relation between a Configuration and an EventType, stating that an event of that type has successfully ended in a State described by the Configuration.")
+AnnotationAssertion(rdfs:label SOMA:isExitConditionOf "is exit condition of")
+SubObjectPropertyOf(SOMA:isExitConditionOf dul:associatedWith)
+ObjectPropertyDomain(SOMA:isExitConditionOf SOMA:Configuration)
+ObjectPropertyRange(SOMA:isExitConditionOf dul:EventType)
+
+# Object Property: SOMA:isFirstProcessStepOf (is first process step of)
+
+AnnotationAssertion(rdfs:comment SOMA:isFirstProcessStepOf "A relation between a ProcessType and a ProcessFlow in which it is the first step.")
+AnnotationAssertion(rdfs:label SOMA:isFirstProcessStepOf "is first process step of")
+SubObjectPropertyOf(SOMA:isFirstProcessStepOf SOMA:isProcessStepOf)
+ObjectPropertyDomain(SOMA:isFirstProcessStepOf SOMA:ProcessType)
+ObjectPropertyRange(SOMA:isFirstProcessStepOf SOMA:ProcessFlow)
+
+# Object Property: SOMA:isProcessStepOf (is process step of)
+
+AnnotationAssertion(rdfs:comment SOMA:isProcessStepOf "A relation between a ProcessType and a ProcessFlow in which it is a step.")
+AnnotationAssertion(rdfs:label SOMA:isProcessStepOf "is process step of")
+SubObjectPropertyOf(SOMA:isProcessStepOf SOMA:isProcessDefinedIn)
+ObjectPropertyDomain(SOMA:isProcessStepOf SOMA:ProcessType)
+ObjectPropertyRange(SOMA:isProcessStepOf SOMA:ProcessFlow)
+
+# Object Property: SOMA:isTriggerConditionOf (is trigger condition of)
+
+AnnotationAssertion(rdfs:comment SOMA:isTriggerConditionOf "A relation between a Configuration and a ProcessType, stating that a process of that type starts by itself in a State described by the Configuration.")
+AnnotationAssertion(rdfs:label SOMA:isTriggerConditionOf "is trigger condition of")
+SubObjectPropertyOf(SOMA:isTriggerConditionOf dul:associatedWith)
+ObjectPropertyDomain(SOMA:isTriggerConditionOf SOMA:Configuration)
+ObjectPropertyRange(SOMA:isTriggerConditionOf SOMA:ProcessType)
+
+# Object Property: SOMA:isVerificationOf (is verification of)
+
+AnnotationAssertion(rdfs:comment SOMA:isVerificationOf "A relation between a ProcessVerification and the EventType whose events it checks.")
+AnnotationAssertion(rdfs:label SOMA:isVerificationOf "is verification of")
+SubObjectPropertyOf(SOMA:isVerificationOf dul:usesConcept)
+ObjectPropertyDomain(SOMA:isVerificationOf SOMA:ProcessVerification)
+ObjectPropertyRange(SOMA:isVerificationOf dul:EventType)
+
+# Object Property: SOMA:violatesCondition (violates condition)
+
+AnnotationAssertion(rdfs:comment SOMA:violatesCondition "A relation between a ProcessDeviation and a Configuration that is not satisfied, e.g. the exit condition of the step during which the deviation occurs.")
+AnnotationAssertion(rdfs:label SOMA:violatesCondition "violates condition")
+SubObjectPropertyOf(SOMA:violatesCondition dul:associatedWith)
+ObjectPropertyDomain(SOMA:violatesCondition SOMA:ProcessDeviation)
+ObjectPropertyRange(SOMA:violatesCondition SOMA:Configuration)
+
+
+############################
+#   Data Properties
+############################
+
+# Data Property: SOMA:expectedSignalValue (expected signal value)
+
+AnnotationAssertion(rdfs:comment SOMA:expectedSignalValue "The value, or an expression over values, that the signal of a SignalVerification is expected to have when the verified event has succeeded, e.g. '< 0.4 Nm'.")
+AnnotationAssertion(rdfs:label SOMA:expectedSignalValue "expected signal value")
+SubDataPropertyOf(SOMA:expectedSignalValue dul:hasDataValue)
+DataPropertyDomain(SOMA:expectedSignalValue SOMA:SignalVerification)
+DataPropertyRange(SOMA:expectedSignalValue xsd:string)
+
+# Data Property: SOMA:hasExpectedDuration (has expected duration)
+
+AnnotationAssertion(rdfs:comment SOMA:hasExpectedDuration "The expected duration, in seconds, of an event classified by the EventType. The value can be learned from recorded executions (e.g. NEEMs) and refined over time.")
+AnnotationAssertion(rdfs:label SOMA:hasExpectedDuration "has expected duration")
+SubDataPropertyOf(SOMA:hasExpectedDuration dul:hasDataValue)
+DataPropertyDomain(SOMA:hasExpectedDuration dul:EventType)
+DataPropertyRange(SOMA:hasExpectedDuration xsd:double)
+
+# Data Property: SOMA:hasMaxRepetitions (has max repititions)
+
+AnnotationAssertion(rdfs:comment SOMA:hasMaxRepetitions "The maximal number of times an event classified by the EventType may occur within one unfolding of the description that defines the EventType, e.g. how often a step may be repeated before a ProcessDeviation is assumed.")
+AnnotationAssertion(rdfs:label SOMA:hasMaxRepetitions "has max repititions")
+SubDataPropertyOf(SOMA:hasMaxRepetitions dul:hasDataValue)
+FunctionalDataProperty(SOMA:hasMaxRepetitions)
+DataPropertyDomain(SOMA:hasMaxRepetitions dul:EventType)
+DataPropertyRange(SOMA:hasMaxRepetitions xsd:nonNegativeInteger)
+
+# Data Property: SOMA:hasMinRepetitions (has min repititions)
+
+AnnotationAssertion(rdfs:comment SOMA:hasMinRepetitions "The minimal number of times an event classified by the EventType must occur within one unfolding of the description that defines the EventType, e.g. of a ProcessFlow.")
+AnnotationAssertion(rdfs:label SOMA:hasMinRepetitions "has min repititions")
+SubDataPropertyOf(SOMA:hasMinRepetitions dul:hasDataValue)
+FunctionalDataProperty(SOMA:hasMinRepetitions)
+DataPropertyDomain(SOMA:hasMinRepetitions dul:EventType)
+DataPropertyRange(SOMA:hasMinRepetitions xsd:nonNegativeInteger)
+
+# Data Property: SOMA:signalIdentifier (signal identifier)
+
+AnnotationAssertion(rdfs:comment SOMA:signalIdentifier "The identifier of the signal that is checked by a SignalVerification, e.g. the name of a sensor channel or of a ROS topic.")
+AnnotationAssertion(rdfs:label SOMA:signalIdentifier "signal identifier")
+SubDataPropertyOf(SOMA:signalIdentifier dul:hasDataValue)
+DataPropertyDomain(SOMA:signalIdentifier SOMA:SignalVerification)
+DataPropertyRange(SOMA:signalIdentifier xsd:string)
+
+
+
+############################
+#   Classes
+############################
+
+# Class: SOMA:LowerThreshold (Lower threshold)
+
+AnnotationAssertion(rdfs:comment SOMA:LowerThreshold "A Threshold whose value must be reached or exceeded for a condition to be satisfied, e.g. a minimal temperature or a minimal grasp force. The value is given by dul:hasParameterDataValue, the Region of acceptable values by dul:parametrizes, and the Concept classifying the constrained entity by dul:isParameterFor. A range of values is expressed by a LowerThreshold together with an UpperThreshold.")
+AnnotationAssertion(rdfs:label SOMA:LowerThreshold "Lower threshold")
+SubClassOf(SOMA:LowerThreshold SOMA:Threshold)
+SubClassOf(SOMA:LowerThreshold DataSomeValuesFrom(dul:hasParameterDataValue rdfs:Literal))
+DisjointClasses(SOMA:LowerThreshold SOMA:UpperThreshold)
+
+# Class: SOMA:PerceptualVerification (Perceptual verification)
+
+AnnotationAssertion(rdfs:comment SOMA:PerceptualVerification "A ProcessVerification that is performed by the perception system of an agent, e.g. visually checking whether a surface is clean.")
+AnnotationAssertion(rdfs:label SOMA:PerceptualVerification "Perceptual verification")
+SubClassOf(SOMA:PerceptualVerification SOMA:ProcessVerification)
+DisjointClasses(SOMA:PerceptualVerification SOMA:SignalVerification)
+
+# Class: SOMA:ProcessDeviation (Process deviation)
+
+AnnotationAssertion(rdfs:comment SOMA:ProcessDeviation "An Event within a Progression in which the unfolding of a process does not match its ProcessFlow, e.g. an exit condition is not reached within the expected duration, or an object ends up in an unintended state such as being dropped or overheated. The kind of deviation is given by a ProcessDeviationType that classifies it, the Process during which it occurs by dul:isPartOf, and the condition that is not satisfied by violatesCondition.")
+AnnotationAssertion(rdfs:label SOMA:ProcessDeviation "Process deviation")
+SubClassOf(SOMA:ProcessDeviation dul:Event)
+SubClassOf(SOMA:ProcessDeviation ObjectSomeValuesFrom(dul:isEventIncludedIn SOMA:Progression))
+
+# Class: SOMA:ProcessDeviationType (Process deviation type)
+
+AnnotationAssertion(rdfs:comment SOMA:ProcessDeviationType "An EventType that classifies ProcessDeviations, e.g. a timeout, a collision, or an object slipping out of a gripper.")
+AnnotationAssertion(rdfs:label SOMA:ProcessDeviationType "Process deviation type")
+SubClassOf(SOMA:ProcessDeviationType dul:EventType)
+SubClassOf(SOMA:ProcessDeviationType ObjectAllValuesFrom(dul:classifies SOMA:ProcessDeviation))
+
+# Class: SOMA:ProcessVerification (Process verification)
+
+AnnotationAssertion(rdfs:comment SOMA:ProcessVerification "A Description of how an agent can check whether an event classified by some EventType has reached its goal, typically its exit condition.")
+AnnotationAssertion(rdfs:label SOMA:ProcessVerification "Process verification")
+SubClassOf(SOMA:ProcessVerification dul:Description)
+
+# Class: SOMA:SignalVerification (Signal verification)
+
+AnnotationAssertion(rdfs:comment SOMA:SignalVerification "A ProcessVerification that compares the value of a sensor or controller signal, e.g. a force, torque or temperature reading, with an expected value.")
+AnnotationAssertion(rdfs:label SOMA:SignalVerification "Signal verification")
+SubClassOf(SOMA:SignalVerification SOMA:ProcessVerification)
+SubClassOf(SOMA:SignalVerification DataSomeValuesFrom(SOMA:signalIdentifier xsd:string))
+
+# Class: SOMA:TransformationProcess (Transformation process)
+
+AnnotationAssertion(rdfs:comment SOMA:TransformationProcess "A Process in which some participant is a Transient, i.e. an object that is no longer the input of the process but not yet its result, e.g. molten metal during casting or a mixture during mixing.")
+AnnotationAssertion(rdfs:label SOMA:TransformationProcess "Transformation process")
+EquivalentClasses(SOMA:TransformationProcess ObjectIntersectionOf(dul:Process ObjectSomeValuesFrom(dul:hasParticipant SOMA:Transient)))
+
+# Class: SOMA:UpperThreshold (Upper threshold)
+
+AnnotationAssertion(rdfs:comment SOMA:UpperThreshold "A Threshold whose value must not be exceeded for a condition to be satisfied, e.g. a maximal force when handling a fragile object. The value is given by dul:hasParameterDataValue, the Region of acceptable values by dul:parametrizes, and the Concept classifying the constrained entity by dul:isParameterFor.")
+AnnotationAssertion(rdfs:label SOMA:UpperThreshold "Upper threshold")
+SubClassOf(SOMA:UpperThreshold SOMA:Threshold)
+SubClassOf(SOMA:UpperThreshold DataSomeValuesFrom(dul:hasParameterDataValue rdfs:Literal))
+
+
+)
