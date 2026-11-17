@@ -88,7 +88,7 @@ SOMA:ProcessType
    └─ SOMA:UndirectedMotion
 </pre>
 
-**Befund:** Die Prozessarten sind fast ausschließlich **Bewegungen** (Fortbewegung, Greifen, Kopfdrehen …) und
+Die Prozessarten sind fast ausschließlich **Bewegungen** (Fortbewegung, Greifen, Kopfdrehen …) und
 physikalische Veränderungen (Verformung, Sieden). Ein `ProcessFlow` sagt nur, *welche* Prozesstypen er definiert –
 nicht in welcher Reihenfolge, wie oft, wie lange, unter welchen Bedingungen und mit welchem Ergebnis.
 
@@ -1461,25 +1461,6 @@ Jede einzelne PKO-Entscheidung steht mit Begründung in `mapping/mapping-pko-som
 | 🟪 in SOMA schon vorhanden | 35 |
 | ⬜ weggelassen | 50 |
 | ➕ zusätzlich, nicht aus der PKO (aus [3]–[6] oder eigene Ergänzung) | 13 |
-
----
-
-## 7 Grenzen und offene Fragen
-
-- **Ereignisse als dritte Kategorie.** PDDL+ kennt neben Aktionen und Prozessen spontane Ereignisse. SOMA 3.0 hält die
-  Frage offen: Die Vorkommnis-Relationen haben die Domain `dul:Event`, sodass auch ein Ereignis ohne Agent einen
-  Prozess starten oder beenden kann (Beispiel Thermostat). Eine eigene Klasse dafür gibt es noch nicht.
-- **Material und Identität.** Was ein Objekt über einen Prozess hinweg behält oder verliert, beschreibt SOMA nur über
-  `Transient` und `transitionsFrom/To`. Ein feineres Identitätsmodell (Zustand für Zustand) ist ein möglicher nächster
-  Schritt.
-- **Schwache Oberproperty.** `hasEntryCondition`, `hasExitCondition`, `hasTriggerCondition`, `violatesCondition` und
-  `terminatesProcess` hängen unter `dul:associatedWith`, der allgemeinsten DUL-Beziehung, weil es keine engere
-  passende gibt.
-- **Typ und Vorkommnis.** Dass eine Kopplung zwischen Vorkommnissen zu einer zwischen Typen passt, kann OWL nicht
-  erzwingen; eine Anwendung muss es prüfen.
-- **Grad der Erfüllung** einer Bedingung (`pko:RequirementSatisfactionLevel`) ist nicht modelliert.
-- **Namen.** „SOMA 3.0“ ist ein Arbeitstitel; die Modulnamen `SOMA-PROC-PK` und `SOMA-ACT-PROC` sind vorläufig.
-- **Anwendung.** Ein Anwendungsbeispiel (Pfannkuchen backen, ohne Simulation) folgt in einem eigenen Repository.
 
 ---
 
