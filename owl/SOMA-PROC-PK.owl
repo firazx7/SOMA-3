@@ -55,10 +55,10 @@ Declaration(DataProperty(SOMA:signalIdentifier))
 #   Object Properties
 ############################
 
-# Object Property: SOMA:addressesDeviation (adresses deviation)
+# Object Property: SOMA:addressesDeviation (addresses deviation)
 
 AnnotationAssertion(rdfs:comment SOMA:addressesDeviation "A relation between an EventType and a ProcessDeviationType, stating that an event of that type can resolve deviations of that kind. It is typically used for fallback steps, e.g. re-grasping addresses an object slipping out of a gripper.")
-AnnotationAssertion(rdfs:label SOMA:addressesDeviation "adresses deviation")
+AnnotationAssertion(rdfs:label SOMA:addressesDeviation "addresses deviation")
 SubObjectPropertyOf(SOMA:addressesDeviation dul:isRelatedToConcept)
 InverseObjectProperties(SOMA:addressesDeviation SOMA:isDeviationAddressedBy)
 ObjectPropertyDomain(SOMA:addressesDeviation dul:EventType)
@@ -131,7 +131,7 @@ AnnotationAssertion(rdfs:label SOMA:hasProcessStep "has process step")
 SubObjectPropertyOf(SOMA:hasProcessStep SOMA:definesProcess)
 InverseObjectProperties(SOMA:hasProcessStep SOMA:isProcessStepOf)
 ObjectPropertyDomain(SOMA:hasProcessStep SOMA:ProcessFlow)
-ObjectPropertyRange(SOMA:hasProcessStep SOMA:ProcessFlow)
+ObjectPropertyRange(SOMA:hasProcessStep SOMA:ProcessType)
 
 # Object Property: SOMA:hasTriggerCondition (has trigger condition)
 
@@ -242,22 +242,23 @@ DataPropertyRange(SOMA:expectedSignalValue xsd:string)
 AnnotationAssertion(rdfs:comment SOMA:hasExpectedDuration "The expected duration, in seconds, of an event classified by the EventType. The value can be learned from recorded executions (e.g. NEEMs) and refined over time.")
 AnnotationAssertion(rdfs:label SOMA:hasExpectedDuration "has expected duration")
 SubDataPropertyOf(SOMA:hasExpectedDuration dul:hasDataValue)
+FunctionalDataProperty(SOMA:hasExpectedDuration)
 DataPropertyDomain(SOMA:hasExpectedDuration dul:EventType)
 DataPropertyRange(SOMA:hasExpectedDuration xsd:double)
 
-# Data Property: SOMA:hasMaxRepetitions (has max repititions)
+# Data Property: SOMA:hasMaxRepetitions (has max repetitions)
 
 AnnotationAssertion(rdfs:comment SOMA:hasMaxRepetitions "The maximal number of times an event classified by the EventType may occur within one unfolding of the description that defines the EventType, e.g. how often a step may be repeated before a ProcessDeviation is assumed.")
-AnnotationAssertion(rdfs:label SOMA:hasMaxRepetitions "has max repititions")
+AnnotationAssertion(rdfs:label SOMA:hasMaxRepetitions "has max repetitions")
 SubDataPropertyOf(SOMA:hasMaxRepetitions dul:hasDataValue)
 FunctionalDataProperty(SOMA:hasMaxRepetitions)
 DataPropertyDomain(SOMA:hasMaxRepetitions dul:EventType)
 DataPropertyRange(SOMA:hasMaxRepetitions xsd:nonNegativeInteger)
 
-# Data Property: SOMA:hasMinRepetitions (has min repititions)
+# Data Property: SOMA:hasMinRepetitions (has min repetitions)
 
 AnnotationAssertion(rdfs:comment SOMA:hasMinRepetitions "The minimal number of times an event classified by the EventType must occur within one unfolding of the description that defines the EventType, e.g. of a ProcessFlow.")
-AnnotationAssertion(rdfs:label SOMA:hasMinRepetitions "has min repititions")
+AnnotationAssertion(rdfs:label SOMA:hasMinRepetitions "has min repetitions")
 SubDataPropertyOf(SOMA:hasMinRepetitions dul:hasDataValue)
 FunctionalDataProperty(SOMA:hasMinRepetitions)
 DataPropertyDomain(SOMA:hasMinRepetitions dul:EventType)
