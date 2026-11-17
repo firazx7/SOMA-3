@@ -1,91 +1,17 @@
-# SOMA 2.0 – Aktionen und Prozesse für Roboter
+# SOMA 3.0 – Aktionen und Prozesse für Roboter
 
 **Erweiterung der Ontologie SOMA um den Ablauf von Prozessen und um die Kopplung von Aktionen und Prozessen**
 
-Firaz Kilic · Betreuung: Michaela Kümpel · Universität Bremen, Institute for Artificial Intelligence (IAI) · 2026
+Firaz Kilic · Universität Bremen, Institute for Artificial Intelligence (IAI) · 2026
 
-*„SOMA 2.0“ ist ein Arbeitstitel. Grundlage ist SOMA 2.2.0 aus [ease-crc/soma](https://github.com/ease-crc/soma)
-(Commit `5d27187`). Diese Dokumentation beschreibt den Ausgangsstand von SOMA, jede Änderung mit Begründung und wie
-man das Ergebnis in Protégé nachprüft.*
-
----
-
-## Kurzfassung
-
-Ein Roboter handelt – er gießt, rührt, wendet. Gleichzeitig laufen in der Welt Vorgänge ab, die er anstößt, antreibt
-oder beendet, die aber auch ohne ihn weiterlaufen: Teig backt, Wasser erhitzt sich, eine Flüssigkeit fließt. Die
-Ontologie SOMA unterscheidet diese beiden Arten von Geschehen (Aktionen und Prozesse), sagt aber weder, **wie ein
-Prozess Schritt für Schritt abläuft**, noch **wie Aktionen und Prozesse zusammenhängen**.
-
-SOMA 2.0 schließt diese Lücken mit zwei neuen Modulen, ohne eine Datei des Original-SOMA zu verändern:
-
-| Teil | Inhalt |
-|---|---|
-| `owl/SOMA-PROC-PK.owl` | **Ablauf von Prozessen:** Schritte, Reihenfolge, Verzweigungen, Wiederholungen, erwartete Dauer, Start-, End- und Auslösebedingungen mit Zahlen-Schwellen, Erfolgsprüfung, Abweichungen und ihre Behebung. Vorbild: Procedural Knowledge Ontology (PKO) [1]. |
-| `owl/SOMA-ACT-PROC.owl` | **Kopplung von Aktionen und Prozessen:** eine Aufgabe startet, treibt an oder beendet einen Prozess; dieses Ereignis hat diesen Prozess gestartet, angetrieben oder beendet; Ausführungszustand eines Prozesses. Vorbilder: Kümpel et al. [4], PDDL+ [5], Event Calculus [6]. |
-| `mapping/` | Entscheidung für jeden der 105 PKO-Begriffe (neu, in SOMA vorhanden, weggelassen) mit Begründung |
-
-| 2 | 46 | 105 | 0 |
-|:---:|:---:|:---:|:---:|
-| neue Module | neue Begriffe: 8 Klassen, 33 Object Properties (inkl. Gegenrichtungen), 5 Data Properties | PKO-Begriffe geprüft und zugeordnet | geänderte Original-Dateien (außer je zwei Import-Zeilen) |
-
-Alle neuen Begriffe sind **nur mit SOMA- und DUL-Vokabular** gebildet: Jeder hängt unter einem vorhandenen SOMA- oder
-DUL-Begriff, und wo SOMA schon etwas hatte (z. B. `Threshold`, `Configuration`, `ExecutionStateRegion`,
-`directlyCauses`), wird es benutzt statt neu erfunden. Die Erweiterung ist **allgemein für Roboter** gedacht; die
-Küche dient nur als Beispiel.
+*„SOMA 3.0“ ist ein Arbeitstitel. Grundlage ist SOMA 2.2.0 aus [ease-crc/soma](https://github.com/ease-crc/soma)
+(Commit `5d27187`). Diese Dokumentation beschreibt den Ausgangsstand von SOMA und jede Änderung mit Begründung.*
 
 ---
 
-## Inhalt
+## Ausgangssituation: Was SOMA heute hat
 
-1. [Aufgabe und Vorgehen](#1-aufgabe-und-vorgehen)
-2. [Ausgangssituation: Was SOMA heute hat](#2-ausgangssituation-was-soma-heute-hat)
-3. [Die Lösung im Überblick](#3-die-lösung-im-überblick)
-4. [Gegenüberstellung in der Protégé-Ansicht](#4-gegenüberstellung-in-der-protégé-ansicht)
-5. [Alle Änderungen im Einzelnen: Was, wie, warum](#5-alle-änderungen-im-einzelnen-was-wie-warum)
-6. [In Protégé ansehen und prüfen](#6-in-protégé-ansehen-und-prüfen)
-7. [Grenzen und offene Fragen](#7-grenzen-und-offene-fragen)
-8. [Repository und Verwendung](#8-repository-und-verwendung)
-9. [Quellen und Lizenz](#9-quellen-und-lizenz)
-
----
-
-## 1 Aufgabe und Vorgehen
-
-**Aufgabe.** Der Prozess-Teil der Top-Level-Ontologie SOMA soll erweitert werden; dazu soll aus der Procedural
-Knowledge Ontology (PKO) [1] übernommen werden, was gebraucht wird – angepasst an Struktur und Vokabular von SOMA.
-Im Lauf der Arbeit zeigte sich, dass ein Prozessablauf allein nicht reicht: Für einen Roboter ist entscheidend, wie
-seine Aktionen Prozesse starten, antreiben und beenden. Deshalb kam ein zweites Modul hinzu, das Aktionen und Prozesse
-koppelt.
-
-**Leitlinien.** Alle Entscheidungen folgen diesen Regeln:
-
-1. **Nur SOMA und DUL als Grundlage.** Neue Begriffe hängen unter vorhandenen SOMA- oder DUL-Begriffen. Fremdes
-   Vokabular (PKO, PROV-O, SKOS …) steht nicht in den Modulen; die Herkunft aus der PKO ist in einer eigenen Datei
-   dokumentiert.
-2. **Allgemein, nicht küchenspezifisch.** Die Begriffe gelten für jede Robotik-Anwendung (Montage, Reinigung,
-   Handhabung …). Kommentare nennen bewusst Beispiele aus verschiedenen Bereichen.
-3. **SOMA-Struktur und -Stil.** Eigene Module wie die SOMA-Module, dieselbe Dateiform (OWL Functional Syntax, wie von
-   Protégé/OWL API geschrieben), englische Labels und Kommentare im SOMA-Stil, Namen im SOMA-Namensraum.
-4. **Designregel von SOMA-PROC einhalten.** SOMA-PROC importiert SOMA-ACT nicht, weil Prozesse grundlegender sind als
-   Aktionen. Das Prozess-Modul hält sich daran; nur das Kopplungsmodul liegt über beiden.
-5. **Original unverändert.** Keine bestehende Datei, Klasse oder Property von SOMA wird umgeschrieben. Ergänzt werden
-   nur neue Begriffe unter vorhandenen und ein einziges Axiom über vorhandene Individuen (Abschnitt 5.I).
-6. **Nachprüfbar.** Alles lässt sich in Protégé ansehen und mit einem Reasoner (HermiT) prüfen.
-
-**Vorgehen.**
-1. SOMA analysiert: Module, Prozess-, Zustands- und Aktionsbegriffe, Zeit, Kausalität (Abschnitt 2).
-2. Alle 105 Klassen und Properties der PKO einzeln entschieden: neu anlegen, in SOMA schon vorhanden oder weglassen
-   (`mapping/mapping-pko-soma.csv`).
-3. Die Anforderungen aus Kümpel et al. [4] (Aufgaben lösen Prozesse aus und stoppen sie) und aus PDDL+ [5] und dem
-   Event Calculus [6] (Aktion, Prozess, Ereignis; beginnen und beenden) eingearbeitet.
-4. Die beiden Module in Protégé gebaut und mit dem Reasoner geprüft.
-
----
-
-## 2 Ausgangssituation: Was SOMA heute hat
-
-### 2.1 DUL in fünf Begriffen
+### DUL in fünf Begriffen
 
 SOMA baut auf **DUL** auf (DOLCE+DnS Ultralite), einer kleinen Top-Level-Ontologie. Für das Verständnis der
 Erweiterung reichen fünf Ideen:
@@ -102,7 +28,7 @@ Daraus ergibt sich in SOMA durchgängig eine **Zweiteilung**: eine *beschreibend
 Abläufe, Bedingungen – also Begriffe und Beschreibungen) und eine *physische* Ebene (konkrete Aktionen, Prozesse,
 Zustände, Objekte). Die Erweiterung hält sich an diese Zweiteilung.
 
-### 2.2 Aufbau von SOMA
+### Aufbau von SOMA
 
 SOMA (Socio-physical Model of Activities) [2] ist die Ontologie des IAI Bremen für Alltagsaktivitäten von Robotern und
 wird in KnowRob und CRAM verwendet. Version 2.2.0 besteht aus diesen Dateien:
@@ -128,7 +54,7 @@ Individuen im SOMA-Namensraum, dazu 78 Klassen und 117 Properties aus DUL.
 is more fundamental than the action – an action can even be regarded as a process as long as the agentive nature of
 its cause is not relevant.* Aktionen bauen auf Prozessen auf, nicht umgekehrt.
 
-### 2.3 Prozesse in SOMA
+### Prozesse in SOMA
 
 SOMA-PROC hat zwei Seiten:
 
@@ -166,7 +92,7 @@ SOMA:ProcessType
 physikalische Veränderungen (Verformung, Sieden). Ein `ProcessFlow` sagt nur, *welche* Prozesstypen er definiert –
 nicht in welcher Reihenfolge, wie oft, wie lange, unter welchen Bedingungen und mit welchem Ergebnis.
 
-### 2.4 Zustände in SOMA
+### Zustände in SOMA
 
 SOMA-STATE beschreibt Zustände als Ereignisse, die sich nicht verändern (`SOMA:State`, „stative and homeomeric
 events“). Ein `SOMA:StateType` klassifiziert sie (z. B. `ContactState`, `ContainmentState` in `FunctionalControl`).
@@ -175,7 +101,7 @@ Eine **`SOMA:Configuration`** ist „eine Beschreibung eines Zustands“ und bes
 some value that, when crossed, triggers some condition“) – aber ohne Unterklassen, ohne Richtung (oben/unten) und ohne
 Verwendung in einem Muster.
 
-### 2.5 Aktionen in SOMA
+### Aktionen in SOMA
 
 SOMA-ACT beschreibt Aktionen (`dul:Action`) und eine große Taxonomie von Aufgaben (`dul:Task` → `PhysicalTask` →
 `Actuating`, `Manipulating` …). Für diese Arbeit wichtig:
@@ -190,7 +116,7 @@ SOMA-ACT beschreibt Aktionen (`dul:Action`) und eine große Taxonomie von Aufgab
   Ereignissen. Sie sagen nur „A verursacht B“, nicht ob B *gestartet*, *angetrieben* oder *beendet* wurde.
 - Außerdem gibt es `SOMA:causesTransition` (ein Ereignis bewirkt einen Situationsübergang).
 
-### 2.6 Zeit in SOMA
+### Zeit in SOMA
 
 Ereignisse haben Zeitpunkte (`SOMA:hasEventBegin`, `hasEventEnd`, Sekunden als `xsd:double`). `SOMA.owl` enthält die
 **Allen-Relationen** als Vokabular (`before`, `after`, `meets`, `metBy`, `overlappedBy`, `during`, `contains`,
@@ -198,7 +124,7 @@ Ereignisse haben Zeitpunkte (`SOMA:hasEventBegin`, `hasEventEnd`, Sekunden als `
 stehen in `SOMA-Allen.owl`, das laut eigenem Kommentar nicht eingebunden ist, weil es OWL DL sprengt. Aus Zeitpunkten
 ableiten kann ein OWL-Reasoner diese Relationen ohnehin nicht, weil OWL keine Zahlen vergleicht.
 
-### 2.7 Was fehlt
+### Was fehlt
 
 Das SOMA-Paper [2] sagt ausdrücklich: *„An action may cause processes to be started or stopped, and states to be
 changed.“* Im Modell ist das nicht abgebildet. Zusammengefasst:
@@ -218,7 +144,7 @@ changed.“* Im Modell ist das nicht abgebildet. Zusammengefasst:
 | In welchem Zustand ist ein Prozess (läuft, fertig, abgebrochen)? | `hasExecutionState` nur für Aktionen | fehlt für Prozesse |
 | Welche Prozesse laufen *jetzt*, welche müssen starten oder enden? | – | OWL kann das nicht entscheiden (Zeit, Zahlen, Verneinung) |
 
-### 2.8 Woraus die Erweiterung schöpft
+### Woraus die Erweiterung schöpft
 
 **Procedural Knowledge Ontology (PKO) [1].** Beschreibt industrielle Verfahren (Cefriel, EU-Projekt PERKS), aufbauend
 auf PROV-O und P-Plan. Ihre Stärke ist eine genaue Schrittstruktur: Reihenfolge (`nextStep`), Alternativen
@@ -246,7 +172,7 @@ und Ereignisse starten und stoppen Prozesse. Ein Prozess ist dort aber kein Ding
 
 ---
 
-## 3 Die Lösung im Überblick
+## Die Lösung im Überblick
 
 <p align="center"><img src="abbildungen/03b_soma_modules_neu.png" width="560" alt="Einordnung der neuen Module"></p>
 
@@ -285,22 +211,22 @@ dieses Repositorys.
 
 ---
 
-## 4 Gegenüberstellung in der Protégé-Ansicht
+## Gegenüberstellung in der Protégé-Ansicht
 
-Die folgenden Bäume zeigen links das Original-SOMA und rechts SOMA 2.0, so wie sie in Protégé im Reiter *Entities*
+Die folgenden Bäume zeigen links das Original-SOMA und rechts SOMA 3.0, so wie sie in Protégé im Reiter *Entities*
 erscheinen (asserted hierarchy, Anzeige über **View → Render by prefixed name**). Sie sind direkt aus den OWL-Dateien
 erzeugt. Damit die Bäume lesbar bleiben, sind nur die Äste aufgeklappt, in denen sich etwas ändert;
 **▸** heißt „hat weitere Unterbegriffe“, **… n weitere** fasst unveränderte Geschwister zusammen.
-**🟩 fett** = neu in SOMA 2.0. Bestehende Begriffe werden an keiner Stelle verändert; alle Änderungen sind neue
+**🟩 fett** = neu in SOMA 3.0. Bestehende Begriffe werden an keiner Stelle verändert; alle Änderungen sind neue
 Begriffe unter vorhandenen.
 
-### 4.1 Klassen
+### Klassen
 
 **Ereignisse (`dul:Event`).** Neu: der definierte `TransformationProcess` unter `dul:Process` und die
 `ProcessDeviation` als eigenes Ereignis.
 
 <table>
-<tr><th>Original-SOMA 2.2.0</th><th>SOMA 2.0 (🟩 = neu)</th></tr>
+<tr><th>Original-SOMA 2.2.0</th><th>SOMA 3.0 (🟩 = neu)</th></tr>
 <tr><td valign="top">
 <pre>
 dul:Event
@@ -341,7 +267,7 @@ dul:Event
 sind Ereignistypen); `LowerThreshold` und `UpperThreshold` unter dem bisher leeren `SOMA:Threshold`.
 
 <table>
-<tr><th>Original-SOMA 2.2.0</th><th>SOMA 2.0 (🟩 = neu)</th></tr>
+<tr><th>Original-SOMA 2.2.0</th><th>SOMA 3.0 (🟩 = neu)</th></tr>
 <tr><td valign="top">
 <pre>
 dul:Concept
@@ -421,7 +347,7 @@ dul:Concept
 `Configuration`, die unverändert genutzt werden.
 
 <table>
-<tr><th>Original-SOMA 2.2.0</th><th>SOMA 2.0 (🟩 = neu)</th></tr>
+<tr><th>Original-SOMA 2.2.0</th><th>SOMA 3.0 (🟩 = neu)</th></tr>
 <tr><td valign="top">
 <pre>
 dul:Description
@@ -461,7 +387,7 @@ dul:Description
 erfüllt) wird genutzt, um Abweichungen einzuordnen.
 
 <table>
-<tr><th>Original-SOMA 2.2.0</th><th>SOMA 2.0 (🟩 = neu)</th></tr>
+<tr><th>Original-SOMA 2.2.0</th><th>SOMA 3.0 (🟩 = neu)</th></tr>
 <tr><td valign="top">
 <pre>
 dul:Situation
@@ -490,7 +416,7 @@ dul:Situation
 </table>
 
 
-### 4.2 Object Properties
+### Object Properties
 
 Alle Object Properties hängen in DUL unter `dul:associatedWith`. Die Bäume sind nach den Ästen aufgeteilt, in denen
 die neuen Properties stehen.
@@ -498,7 +424,7 @@ die neuen Properties stehen.
 **Beschreibung benutzt Begriff (`dul:usesConcept`)** – Schritte eines Ablaufs, Prüfung eines Schritts:
 
 <table>
-<tr><th>Original-SOMA 2.2.0</th><th>SOMA 2.0 (🟩 = neu)</th></tr>
+<tr><th>Original-SOMA 2.2.0</th><th>SOMA 3.0 (🟩 = neu)</th></tr>
 <tr><td valign="top">
 <pre>
 dul:usesConcept
@@ -532,7 +458,7 @@ dul:usesConcept
 **Begriff wird in Beschreibung benutzt (`dul:isConceptUsedIn`)** – die Gegenrichtungen:
 
 <table>
-<tr><th>Original-SOMA 2.2.0</th><th>SOMA 2.0 (🟩 = neu)</th></tr>
+<tr><th>Original-SOMA 2.2.0</th><th>SOMA 3.0 (🟩 = neu)</th></tr>
 <tr><td valign="top">
 <pre>
 dul:isConceptUsedIn
@@ -566,7 +492,7 @@ dul:isConceptUsedIn
 „dieses Ereignis hat diesen Prozess gestartet“ unter `SOMA:directlyCauses`:
 
 <table>
-<tr><th>Original-SOMA 2.2.0</th><th>SOMA 2.0 (🟩 = neu)</th></tr>
+<tr><th>Original-SOMA 2.2.0</th><th>SOMA 3.0 (🟩 = neu)</th></tr>
 <tr><td valign="top">
 <pre>
 dul:precedes
@@ -606,7 +532,7 @@ dul:precedes
 **Gegenrichtung (`dul:follows`):**
 
 <table>
-<tr><th>Original-SOMA 2.2.0</th><th>SOMA 2.0 (🟩 = neu)</th></tr>
+<tr><th>Original-SOMA 2.2.0</th><th>SOMA 3.0 (🟩 = neu)</th></tr>
 <tr><td valign="top">
 <pre>
 dul:follows
@@ -647,7 +573,7 @@ welcher Schritt welche Abweichungsart behebt. Daneben steht das vorhandene `SOMA
 nach demselben Muster:
 
 <table>
-<tr><th>Original-SOMA 2.2.0</th><th>SOMA 2.0 (🟩 = neu)</th></tr>
+<tr><th>Original-SOMA 2.2.0</th><th>SOMA 3.0 (🟩 = neu)</th></tr>
 <tr><td valign="top">
 <pre>
 dul:isRelatedToConcept
@@ -685,7 +611,7 @@ dul:isRelatedToConcept
 **Regionen (`dul:hasRegion`)** – Ausführungszustand eines Prozesses neben dem vorhandenen für Aktionen:
 
 <table>
-<tr><th>Original-SOMA 2.2.0</th><th>SOMA 2.0 (🟩 = neu)</th></tr>
+<tr><th>Original-SOMA 2.2.0</th><th>SOMA 3.0 (🟩 = neu)</th></tr>
 <tr><td valign="top">
 <pre>
 dul:hasRegion
@@ -715,7 +641,7 @@ dul:hasRegion
 DUL keine engere passende Oberproperty (Begründung in Abschnitt 5.C und 5.H):
 
 <table>
-<tr><th>Original-SOMA 2.2.0</th><th>SOMA 2.0 (🟩 = neu)</th></tr>
+<tr><th>Original-SOMA 2.2.0</th><th>SOMA 3.0 (🟩 = neu)</th></tr>
 <tr><td valign="top">
 <pre>
 dul:associatedWith
@@ -766,12 +692,12 @@ dul:associatedWith
 </table>
 
 
-### 4.3 Data Properties
+### Data Properties
 
 Alle Data Properties in SOMA hängen unter `dul:hasDataValue`; die fünf neuen ebenso:
 
 <table>
-<tr><th>Original-SOMA 2.2.0</th><th>SOMA 2.0 (🟩 = neu)</th></tr>
+<tr><th>Original-SOMA 2.2.0</th><th>SOMA 3.0 (🟩 = neu)</th></tr>
 <tr><td valign="top">
 <pre>
 dul:hasDataValue
@@ -807,18 +733,18 @@ dul:hasDataValue
 </table>
 
 
-### 4.4 Individuen
+### Individuen
 
 Die sechs Ausführungszustände (`SOMA:ExecutionState_Active`, `_Cancelled`, `_Failed`, `_Paused`, `_Pending`,
 `_Succeeded`) bleiben unverändert. Neu ist ein Axiom über sie (Abschnitt 5.I):
 
-| | Original-SOMA 2.2.0 | SOMA 2.0 |
+| | Original-SOMA 2.2.0 | SOMA 3.0 |
 |---|---|---|
 | Protégé, Individuum `ExecutionState_Failed` → *Different Individuals* | leer | 🟩 `ExecutionState_Active`, `_Cancelled`, `_Paused`, `_Pending`, `_Succeeded` |
 
 ### 4.5 Zusammenfassung der Änderungen
 
-| | Original | SOMA 2.0 | Unterschied |
+| | Original | SOMA 3.0 | Unterschied |
 |---|---:|---:|---|
 | Klassen (SOMA-Namensraum, in SOMA-ALL) | 495 | 503 | +8 neue Klassen |
 | Object Properties | 202 | 235 | +33 (davon 15 Gegenrichtungen) |
@@ -829,14 +755,14 @@ Die sechs Ausführungszustände (`SOMA:ExecutionState_Active`, `_Cancelled`, `_F
 
 ---
 
-## 5 Alle Änderungen im Einzelnen: Was, wie, warum
+## Alle Änderungen im Einzelnen: Was, wie, warum
 
 Zu jedem neuen Begriff steht zuerst, was Protégé im Fenster *Description* zeigt, dann der englische Kommentar aus der
 Ontologie und eine Erklärung:
 **Was** er ausdrückt, **wie** er in SOMA/DUL eingehängt ist, **warum** er gebraucht wird und so gebaut ist, und woher
 er stammt. Gegenrichtungen (eigene Properties mit vertauschter Domain und Range) stehen beim Hauptbegriff.
 
-#### 5.A Schritte und Reihenfolge eines Ablaufs  ·  Modul `SOMA-PROC-PK`
+#### Schritte und Reihenfolge eines Ablaufs  ·  Modul `SOMA-PROC-PK`
 
 ##### `SOMA:hasProcessStep` und `SOMA:isProcessStepOf`
 
@@ -947,7 +873,7 @@ Object property: SOMA:hasFallbackProcessStep
 - **Warum:** Fehlerbehandlung gehört zum Ablauf. Der Fallback muss vom normalen Ablauf unterscheidbar sein, sonst würde ein Programm ihn im Normalfall ausführen.
 - **Herkunft:** `pko:hasFallbackStep`
 
-#### 5.B Wiederholungen und Dauer  ·  Modul `SOMA-PROC-PK`
+#### Wiederholungen und Dauer  ·  Modul `SOMA-PROC-PK`
 
 ##### `SOMA:hasMinRepetitions`
 
@@ -1003,7 +929,7 @@ Data property: SOMA:hasExpectedDuration
 - **Warum:** In der PKO ist die Dauer ein eigenes Objekt (`time:Duration`). Für einen Roboter ist eine Zahl einfacher: Sie lässt sich vergleichen (dauert ein Prozess zu lange?) und aus aufgezeichneten Läufen (NEEMs) lernen. *Functional*, damit ein Schritt nicht zwei widersprüchliche Erwartungen hat; zwei verschiedene Werte führen zu einem Widerspruch.
 - **Herkunft:** `pko:hasExpectedDuration`
 
-#### 5.C Bedingungen und Schwellen  ·  Modul `SOMA-PROC-PK`
+#### Bedingungen und Schwellen  ·  Modul `SOMA-PROC-PK`
 
 ##### `SOMA:hasEntryCondition` und `SOMA:isEntryConditionOf`
 
@@ -1114,7 +1040,7 @@ Class: SOMA:UpperThreshold
 - **Warum:** Gegenstück zu `LowerThreshold`. Die Disjunktheit verhindert, dass dieselbe Schwelle beides ist.
 - **Herkunft:** eigene Ergänzung
 
-#### 5.D Erfolgsprüfung  ·  Modul `SOMA-PROC-PK`
+#### Erfolgsprüfung  ·  Modul `SOMA-PROC-PK`
 
 ##### `SOMA:ProcessVerification`
 
@@ -1223,7 +1149,7 @@ Data property: SOMA:expectedSignalValue
 - **Warum:** Unverändert aus der PKO übernommen. Für maschinell auswertbare Grenzwerte gibt es zusätzlich die Schwellen.
 - **Herkunft:** `pko:expectedSignalValue` (exactMatch)
 
-#### 5.E Abweichungen  ·  Modul `SOMA-PROC-PK`
+#### Abweichungen  ·  Modul `SOMA-PROC-PK`
 
 ##### `SOMA:ProcessDeviation`
 
@@ -1307,7 +1233,7 @@ Object property: SOMA:isConditionViolatedBy
 - **Warum:** Die PKO beschreibt die Ursache eines Fehlers nur als Freitext (`pko:errorCause`). Die verletzte Bedingung ist maschinell auswertbar.
 - **Herkunft:** eigene Ergänzung
 
-#### 5.F Prozesse mit Zwischenprodukt  ·  Modul `SOMA-PROC-PK`
+#### Prozesse mit Zwischenprodukt  ·  Modul `SOMA-PROC-PK`
 
 ##### `SOMA:TransformationProcess`
 
@@ -1324,7 +1250,7 @@ Class: SOMA:TransformationProcess
 - **Warum:** SOMA hat `Transient`, aber keinen Begriff für die Prozesse, in denen solche Zwischenprodukte entstehen. Eine Definition statt einer bloßen Unterklasse, damit niemand die Einordnung von Hand vornehmen muss.
 - **Herkunft:** [4]
 
-#### 5.G Kopplung zwischen Aufgaben und Prozesstypen  ·  Modul `SOMA-ACT-PROC`
+#### Kopplung zwischen Aufgaben und Prozesstypen  ·  Modul `SOMA-ACT-PROC`
 
 ##### `SOMA:triggersProcess` und `SOMA:isProcessTriggeredBy`
 
@@ -1401,7 +1327,7 @@ Object property: SOMA:isProcessStoppedBy
 - **Warum:** Gegenstück zum Starten. Die Domain ist breiter als `dul:Task`, weil in [4] auch das Entstehen eines Ergebnisses (eine Rolle) einen Prozess beendet.
 - **Herkunft:** `stops_process` in [4]; Event Calculus *terminates* [6]
 
-#### 5.H Kopplung zwischen konkreten Ereignissen und Prozessen  ·  Modul `SOMA-ACT-PROC`
+#### Kopplung zwischen konkreten Ereignissen und Prozessen  ·  Modul `SOMA-ACT-PROC`
 
 ##### `SOMA:initiatesProcess` und `SOMA:isProcessInitiatedBy`
 
@@ -1497,7 +1423,7 @@ Object property: SOMA:hasProcessState
 - **Herkunft:** eigene Ergänzung
 
 
-#### 5.I Axiom über vorhandene SOMA-Individuen  ·  Modul `SOMA-ACT-PROC`
+#### Axiom über vorhandene SOMA-Individuen  ·  Modul `SOMA-ACT-PROC`
 
 ```text
 DifferentIndividuals: SOMA:ExecutionState_Active, SOMA:ExecutionState_Cancelled, SOMA:ExecutionState_Failed,
@@ -1511,7 +1437,7 @@ DifferentIndividuals: SOMA:ExecutionState_Active, SOMA:ExecutionState_Cancelled,
   Zustände, folgert ein Reasoner ohne dieses Axiom einfach, beide Zustände seien dasselbe – statt einen Widerspruch zu
   melden. Dasselbe gilt im Original für Aktionen und `hasExecutionState`.
 
-#### 5.J Bewusst nicht übernommen oder nicht geändert
+#### Bewusst nicht übernommen oder nicht geändert
 
 | Was | Entscheidung | Grund |
 |---|---|---|
@@ -1538,31 +1464,9 @@ Jede einzelne PKO-Entscheidung steht mit Begründung in `mapping/mapping-pko-som
 
 ---
 
-## 6 In Protégé ansehen und prüfen
-
-1. Protégé (5.5 oder neuer) öffnen, **File → Open** und `owl/SOMA-ACT-PROC.owl` wählen. Es importiert SOMA-PROC-PK
-   und SOMA-ACT; der Katalog `owl/catalog-v001.xml` lädt alle Importe lokal.
-2. **View → Render by prefixed name**, damit `SOMA:` und `dul:` vor den Namen stehen.
-3. Reiter **Entities**: Die neuen Klassen, Object und Data Properties stehen mit Oberbegriff, Gegenrichtung, Domain,
-   Range, Label und Kommentar so da wie in Abschnitt 4 und 5 beschrieben.
-4. **Reasoner → HermiT → Start reasoner** (dauert wegen SOMA-ACT einige Minuten). Erwartung: Die Ontologie ist
-   konsistent, keine der neuen Klassen ist unerfüllbar. In der abgeleiteten Hierarchie steht `TransformationProcess`
-   unter `dul:Process`, `drivesProcess` unter `triggersProcess` und `sustainsProcess` unter `initiatesProcess` unter
-   `SOMA:directlyCauses`.
-5. Für ganz SOMA `owl/SOMA-ALL.owl` öffnen; als Reasoner ist dort JFact schneller.
-
-**Befunde am Original-SOMA**, die dabei auffallen und nicht von der Erweiterung stammen:
-
-- Die Klassen `SOMA:Color`, `SOMA:PreferenceOrder`, `SOMA:PreferenceRegion` sind unerfüllbar.
-- Die Property `SOMA:isAskedBy` (SOMA-ACT) ist unerfüllbar.
-- `preventedBy` in SOMA-ACT hat eine fehlerhafte IRI (`http://www.ease-crc.org/ont/SOMA.owl/preventedBy`, ohne `#`).
-- Die Ausführungszustände sind nicht als verschieden festgelegt (behoben durch 5.I).
-
----
-
 ## 7 Grenzen und offene Fragen
 
-- **Ereignisse als dritte Kategorie.** PDDL+ kennt neben Aktionen und Prozessen spontane Ereignisse. SOMA 2.0 hält die
+- **Ereignisse als dritte Kategorie.** PDDL+ kennt neben Aktionen und Prozessen spontane Ereignisse. SOMA 3.0 hält die
   Frage offen: Die Vorkommnis-Relationen haben die Domain `dul:Event`, sodass auch ein Ereignis ohne Agent einen
   Prozess starten oder beenden kann (Beispiel Thermostat). Eine eigene Klasse dafür gibt es noch nicht.
 - **Material und Identität.** Was ein Objekt über einen Prozess hinweg behält oder verliert, beschreibt SOMA nur über
@@ -1574,61 +1478,12 @@ Jede einzelne PKO-Entscheidung steht mit Begründung in `mapping/mapping-pko-som
 - **Typ und Vorkommnis.** Dass eine Kopplung zwischen Vorkommnissen zu einer zwischen Typen passt, kann OWL nicht
   erzwingen; eine Anwendung muss es prüfen.
 - **Grad der Erfüllung** einer Bedingung (`pko:RequirementSatisfactionLevel`) ist nicht modelliert.
-- **Namen.** „SOMA 2.0“ ist ein Arbeitstitel; die Modulnamen `SOMA-PROC-PK` und `SOMA-ACT-PROC` sind vorläufig.
+- **Namen.** „SOMA 3.0“ ist ein Arbeitstitel; die Modulnamen `SOMA-PROC-PK` und `SOMA-ACT-PROC` sind vorläufig.
 - **Anwendung.** Ein Anwendungsbeispiel (Pfannkuchen backen, ohne Simulation) folgt in einem eigenen Repository.
 
 ---
 
----
-
-## 8 Repository und Verwendung
-
-```
-SOMA-2.0/                      Kopie von ease-crc/soma (Commit 5d27187), Zweig soma-2.0
-├── owl/                       Original-SOMA 2.2.0 + die zwei neuen Module
-│   ├── SOMA-PROC-PK.owl       neu: Ablauf von Prozessen
-│   ├── SOMA-ACT-PROC.owl      neu: Kopplung von Aktionen und Prozessen
-│   ├── SOMA-ALL.owl           + 2 Import-Zeilen
-│   └── catalog-v001.xml       + 2 Zeilen
-├── mapping/                   Entscheidungen zu allen PKO-Begriffen
-├── abbildungen/               Bilder dieser Dokumentation
-├── SOMA-2.0.md                diese Dokumentation
-└── README.md, docs/, scripts/ … unverändert aus ease-crc/soma
-```
-
-**Protégé:** `owl/SOMA-ALL.owl` (ganz SOMA mit Erweiterung), `owl/SOMA-PROC-PK.owl` (nur der Ablauf von
-Prozessen) oder `owl/SOMA-ACT-PROC.owl` (Aktionen und Prozesse, mit allem darunter) öffnen. Der Katalog im
-selben Ordner löst alle Importe lokal auf. Als Reasoner eignet sich HermiT; für SOMA-ALL ist JFact schneller.
-
-**Änderungen gegenüber dem Original:** auf GitHub im Vergleich der Zweige `master` (unverändertes Original) und
-`soma-2.0`.
-
-**In eigenen Ontologien:**
-
-```
-Import(<http://www.ease-crc.org/ont/SOMA-ACT-PROC.owl>)   # importiert auch SOMA-PROC-PK
-
-ClassAssertion(SOMA:ProcessFlow :MixingFlow)
-ClassAssertion(SOMA:ProcessType :MainMixing)
-ObjectPropertyAssertion(SOMA:hasFirstProcessStep :MixingFlow :MainMixing)
-DataPropertyAssertion(SOMA:hasExpectedDuration :MainMixing "120.0"^^xsd:double)
-ObjectPropertyAssertion(SOMA:triggersProcess :Pouring :Mixing)
-ObjectPropertyAssertion(SOMA:hasExitCondition :MainMixing :DoughConsistency)
-
-ClassAssertion(SOMA:Configuration :PanIsHot)
-ObjectPropertyAssertion(SOMA:hasTriggerCondition :Baking :PanIsHot)
-ClassAssertion(SOMA:LowerThreshold :MinPanTemperature)
-ObjectPropertyAssertion(dul:defines :PanIsHot :MinPanTemperature)
-DataPropertyAssertion(dul:hasParameterDataValue :MinPanTemperature "80.0"^^xsd:double)
-
-ObjectPropertyAssertion(SOMA:initiatesProcess :PourFlour_1 :Mixing_1)
-ObjectPropertyAssertion(SOMA:terminatesProcess :Stir_1 :Mixing_1)
-ObjectPropertyAssertion(SOMA:hasProcessState :Mixing_1 SOMA:ExecutionState_Succeeded)
-```
-
----
-
-## 9 Quellen und Lizenz
+## Quellen und Lizenz
 
 1. V. A. Carriero, M. Scrocca, I. Baroni, A. Azzini, I. Celino: *Procedural Knowledge Ontology (PKO).* ESWC 2025.
    doi:[10.1007/978-3-031-94578-6_19](https://doi.org/10.1007/978-3-031-94578-6_19) ·
