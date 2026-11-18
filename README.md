@@ -50,10 +50,6 @@ wird in KnowRob und CRAM verwendet. Version 2.2.0 besteht aus diesen Dateien:
 **Größe von SOMA-ALL** (ohne die Erweiterung): 495 Klassen, 202 Object Properties, 36 Data Properties und 10 benannte
 Individuen im SOMA-Namensraum, dazu 78 Klassen und 117 Properties aus DUL.
 
-**Die wichtigste Designregel** steht im Kopf von `SOMA-PROC.owl`: *SOMA-PROC should not import SOMA-ACT … the process
-is more fundamental than the action – an action can even be regarded as a process as long as the agentive nature of
-its cause is not relevant.* Aktionen bauen auf Prozessen auf, nicht umgekehrt.
-
 ### Prozesse in SOMA
 
 SOMA-PROC hat zwei Seiten:
